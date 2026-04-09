@@ -1,3 +1,9 @@
+Steps that I can remember:
+1. Log in to PACE: ssh [gt-username]@login-ice.pace.gatech.edu
+2. make .sh file with instructions for training (ask claude to help). mine for the first experiment is called pace_train.sh
+3. upload the repo to pace (its some sort of scp command ask claude)
+4. Make a conda environment based on the requirements list below (this might be a bit finicky and might require awhile to figure out versions)
+5. run the training via sbatch <name of file>
 
 # Replication Code and Data
 
