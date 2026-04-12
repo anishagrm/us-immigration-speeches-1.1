@@ -1,9 +1,48 @@
 Steps that I can remember:
+
+environment set up:
 1. Log in to PACE: ssh [gt-username]@login-ice.pace.gatech.edu
-2. make .sh file with instructions for training (ask claude to help). mine for the first experiment is called pace_train.sh
-3. upload the repo to pace (its some sort of scp command ask claude)
-4. Make a conda environment based on the requirements list below (this might be a bit finicky and might require awhile to figure out versions)
-5. run the training via sbatch <name of file>
+2. upload the repo to pace and configure vscode to connect to host so u can develop on pace directly
+3. copy the /data dir to the cloned repo
+4.  Make a conda environment based on the requirements list below (this might be a bit finicky and might require awhile to figure out versions)
+
+prep the data:
+5. run the 'Generating splits before training' steps below to create splits from inferred labels
+
+
+Experiment 1:
+6. make .sh file with instructions for training (ask claude to help). Experiment 1's training script is in pace_train.sh. run the training via sbatch <name of file>
+
+Experiment 2:
+
+### Generating splits before training
+
+Before running `pace_train.sh` or any training script, you need to generate the train/dev/test splits from the inferred labels. Use `prepare_splits_from_labels.py` (run from repo root):
+
+```bash
+# Combine all eras into single files
+cat data/annotations/relevance_and_tone/inferred_labels/early_relevance_all.jsonlist \
+    data/annotations/relevance_and_tone/inferred_labels/mid_relevance_all.jsonlist \
+    data/annotations/relevance_and_tone/inferred_labels/modern_relevance_all.jsonlist \
+    > /tmp/all_relevance.jsonlist
+
+cat data/annotations/relevance_and_tone/inferred_labels/early_tone_all.jsonlist \
+    data/annotations/relevance_and_tone/inferred_labels/mid_tone_all.jsonlist \
+    data/annotations/relevance_and_tone/inferred_labels/modern_tone_all.jsonlist \
+    > /tmp/all_tone.jsonlist
+
+# Generate relevance splits
+python prepare_splits_from_labels.py /tmp/all_relevance.jsonlist \
+    --basedir data/speeches/Congress/relevance/splits/basic/
+
+# Generate tone splits
+python prepare_splits_from_labels.py /tmp/all_tone.jsonlist \
+    --basedir data/speeches/Congress/tone/splits/label-weights/
+```
+
+This creates `all.jsonlist` and `folds/{0..9}/train|dev|test.jsonlist` under each basedir, which is what `pace_train.sh` and the classification scripts expect.
+
+
 
 # Replication Code and Data
 
