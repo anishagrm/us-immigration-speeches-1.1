@@ -1,19 +1,19 @@
 Steps that I can remember:
 
-environment set up:
+# Environment set up:
 1. Log in to PACE: ssh [gt-username]@login-ice.pace.gatech.edu
 2. upload the repo to pace and configure vscode to connect to host so u can develop on pace directly
 3. copy the /data dir to the cloned repo
 4.  Make a conda environment based on the requirements list below (this might be a bit finicky and might require awhile to figure out versions)
 
-prep the data:
+# Prep the data:
 5. run the 'Generating splits before training' steps below to create splits from inferred labels
 
 
-Experiment 1:
+# Experiment 1:
 6. make .sh file with instructions for training (ask claude to help). Experiment 1's training script is in pace_train.sh. run the training via sbatch <name of file>
 
-Experiment 2:
+# Experiment 2:
 
 ### Generating splits before training
 
