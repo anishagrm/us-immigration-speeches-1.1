@@ -3,6 +3,7 @@
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:1
+#SBATCH --constraint=A100|V100|RTX_6000
 #SBATCH --mem-per-gpu=16G
 #SBATCH -t 12:00:00
 #SBATCH -o logs/llama_qlora_%j.out
