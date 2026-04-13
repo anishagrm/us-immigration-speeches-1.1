@@ -6,7 +6,7 @@
 #SBATCH --mem-per-gpu=16G
 #SBATCH -t 12:00:00
 #SBATCH -o logs/llama_qlora_%j.out
-#SBATCH --mail-type=BEGIN,END,FAIL
+#SBATCH --mail-type=FAIL
 #SBATCH --mail-user=jvarma3@gatech.edu
 
 # Llama-3.1-8B QLoRA tone classifier

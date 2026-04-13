@@ -16,8 +16,18 @@ ln -s $HOME/scratch/envs/llama $HOME/.conda/envs/llama
 
 # Install packages using the full path to avoid conda activate issues
 $HOME/scratch/envs/llama/bin/pip install "transformers>=4.40" "peft>=0.10" pandas numpy tqdm scikit-learn accelerate bitsandbytes huggingface_hub
+
+# Install PyTorch with CUDA support (PACE uses CUDA 12.9, cu124 is compatible)
+$HOME/scratch/envs/llama/bin/pip uninstall torch -y
+$HOME/scratch/envs/llama/bin/pip install torch --index-url https://download.pytorch.org/whl/cu124
+
+# Verify GPU is visible
+$HOME/scratch/envs/llama/bin/python -c "import torch; print(torch.__version__); print(torch.version.cuda)"
+# Should print: 2.x.x+cu124 and 12.4
 ```
 Note: scratch storage persists across jobs but is wiped at semester end — back up results externally.
+Note: HuggingFace cache also goes to scratch to avoid filling home dir — set HF_HOME=$HOME/scratch/hf_cache before downloading models. The pace_train_llama.sh script does this automatically.
+Note: if home dir fills up, run `rm -rf $HOME/.cache/huggingface` to clear cached model weights from home.
 
 # HuggingFace token setup (required for gated models e.g. Llama):
 - Create an account at huggingface.co

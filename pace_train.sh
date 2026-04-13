@@ -6,8 +6,8 @@
 #SBATCH --mem-per-gpu=16G                                                                                       
 #SBATCH -t 6:00:00                                    
 #SBATCH -o logs/roosebert_%j.out                                                                                
-#SBATCH --mail-type=BEGIN,END,FAIL
-#SBATCH --mail-user=agurram9@gatech.edu
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=jvarma3@gatech.edu
 
 cd $SLURM_SUBMIT_DIR
 mkdir -p logs

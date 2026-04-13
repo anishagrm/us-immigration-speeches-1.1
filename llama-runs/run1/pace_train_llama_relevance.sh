@@ -1,15 +1,15 @@
 #!/bin/bash
-#SBATCH -J llama_qlora_tone
+#SBATCH -J llama_qlora_relevance
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:1
 #SBATCH --mem-per-gpu=16G
 #SBATCH -t 12:00:00
-#SBATCH -o logs/llama_qlora_%j.out
+#SBATCH -o logs/llama_qlora_relevance_%j.out
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=jvarma3@gatech.edu
 
-# Llama-3.1-8B QLoRA tone classifier
+# Llama-3.2-1B QLoRA relevance classifier (binary: yes/no)
 # Requires: conda env 'llama' with transformers, peft, bitsandbytes, trl, tqdm
 
 cd $SLURM_SUBMIT_DIR
@@ -35,10 +35,10 @@ snapshot_download('meta-llama/Llama-3.2-1B')
 print('Model cached.')
 "
 
-echo "=== Training tone classifier (QLoRA) ==="
-srun python3 -m classification.run_llama_qlora \
+echo "=== Training relevance classifier (QLoRA) ==="
+srun python3 -m classification.run_llama_qlora_relevance \
     --model meta-llama/Llama-3.2-1B \
-    --basedir data/speeches/Congress/tone/splits/label-weights/ \
+    --basedir data/speeches/Congress/relevance/splits/basic/ \
     --train-file all.jsonlist \
     --dev-file dev.jsonlist \
     --test-file test.jsonlist \
