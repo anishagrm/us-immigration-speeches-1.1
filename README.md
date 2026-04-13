@@ -4,7 +4,20 @@ Steps that I can remember:
 1. Log in to PACE: ssh [gt-username]@login-ice.pace.gatech.edu
 2. upload the repo to pace and configure vscode to connect to host so u can develop on pace directly
 3. copy the /data dir to the cloned repo
-4.  Make a conda environment based on the requirements list below (this might be a bit finicky and might require awhile to figure out versions)
+4. Make a conda environment and move it to scratch (home dir has a small quota):
+```bash
+module load anaconda3
+conda create -n llama python=3.11 -y
+
+# PACE home dir has a small quota — move the env to scratch and symlink it
+mkdir -p $HOME/scratch/envs
+mv $HOME/.conda/envs/llama $HOME/scratch/envs/llama
+ln -s $HOME/scratch/envs/llama $HOME/.conda/envs/llama
+
+# Install packages using the full path to avoid conda activate issues
+$HOME/scratch/envs/llama/bin/pip install "transformers>=4.40" "peft>=0.10" pandas numpy tqdm scikit-learn accelerate bitsandbytes huggingface_hub
+```
+Note: scratch storage persists across jobs but is wiped at semester end — back up results externally.
 
 # HuggingFace token setup (required for gated models e.g. Llama):
 - Create an account at huggingface.co

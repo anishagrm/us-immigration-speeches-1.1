@@ -17,17 +17,18 @@ echo "Working directory: $(pwd)"
 mkdir -p logs
 
 module load anaconda3
-source activate llama
+conda activate llama
+PYTHON=$HOME/.conda/envs/llama/bin/python
 
 echo "=== Caching Llama-3.1-8B ==="
-python -c "
+$PYTHON -c "
 from huggingface_hub import snapshot_download
 snapshot_download('meta-llama/Llama-3.1-8B')
 print('Model cached.')
 "
 
 echo "=== Training tone classifier (QLoRA) ==="
-srun python -m classification.run_llama_qlora \
+srun $PYTHON -m classification.run_llama_qlora \
     --model meta-llama/Llama-3.1-8B \
     --basedir data/speeches/Congress/tone/splits/label-weights/ \
     --train-file all.jsonlist \
