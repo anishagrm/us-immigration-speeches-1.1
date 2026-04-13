@@ -13,20 +13,21 @@
 # Requires: conda env 'llama' with transformers, peft, bitsandbytes, trl, tqdm
 
 cd $SLURM_SUBMIT_DIR
+echo "Working directory: $(pwd)"
 mkdir -p logs
 
 module load anaconda3
-conda activate llama
+source activate llama
 
 echo "=== Caching Llama-3.1-8B ==="
-python3 -c "
+python -c "
 from huggingface_hub import snapshot_download
 snapshot_download('meta-llama/Llama-3.1-8B')
 print('Model cached.')
 "
 
 echo "=== Training tone classifier (QLoRA) ==="
-srun python3 -m classification.run_llama_qlora \
+srun python -m classification.run_llama_qlora \
     --model meta-llama/Llama-3.1-8B \
     --basedir data/speeches/Congress/tone/splits/label-weights/ \
     --train-file all.jsonlist \
