@@ -1,0 +1,109 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-13-2026 08:50:40
+Job ID:    4818051
+User ID:   jvarma3
+Account:   coc
+Job name:  llama_qlora_tone
+Partition: coc-gpu
+QOS:       coc-ice
+---------------------------------------
+Working directory: /home/hice1/jvarma3/personal/us-immigration-speeches-1.1
+
+CondaError: Run 'conda init' before 'conda deactivate'
+
+=== Caching Llama-3.2-1B ===
+
+Fetching 13 files:   0%|          | 0/13 [00:00<?, ?it/s]
+Fetching 13 files: 100%|██████████| 13/13 [00:00<00:00, 13959.54it/s]
+Model cached.
+=== Training tone classifier (QLoRA) ===
+INFO  Device: cuda
+INFO  Output dir: data/speeches/Congress/tone/splits/label-weights/llama/llama_qlora_Llama-3.2-1B_s42_lr0.0002
+INFO  Loading tokenizer from meta-llama/Llama-3.2-1B
+INFO  Label token IDs  anti(negative)=43324  neutral(neutral)=60668  pro(positive)=31587
+INFO  Loading base model from meta-llama/Llama-3.2-1B
+INFO  HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]
+Loading weights:   1%|          | 1/146 [00:05<13:41,  5.66s/it]
+ading weights:  94%|█████████▍| 137/146 [00:16<00:00, 19.36it/s]
+Loading weights:  96%|█████████▌| 140/146 [00:16<00:00, 12.95it/s]
+Loading weights: 100%|██████████| 146/146 [00:16<00:00,  8.74it/s]
+INFO  HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/generation_config.json "HTTP/1.1 200 OK"
+INFO  Loading training data from data/speeches/Congress/tone/splits/label-weights/all.jsonlist
+INFO    3643 examples
+warmup_ratio is deprecated and will be removed in v5.2. Use `warmup_steps` instead.
+`logging_dir` is deprecated and will be removed in v5.2. Please set `TENSORBOARD_LOGGING_DIR` instead.
+INFO  === Starting training ===
+trainable params: 1,703,936 || all params: 1,237,518,336 || trainable%: 0.1377
+
+  0%|          | 0/684 [00:00<?, ?it/s]/home/hice1/jvarma3/.conda/envs/llama/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py:745: UserWarning: torch.utils.checkpoint: the use_reentrant parameter should be passed explicitly. In version 2.5 we will raise an exception if use_reentrant is not passed. use_reentrant=False is recommended, but if you need to preserve the current default behavior, you can pass use_reentrant=True. Refer to docs for more details on the differences between the two variants.
+  return fn(*args, **kwargs)
+
+  0%|          | 1/684 [00:10<2:00:39, 10.60s/it]
+  0%|          | 2/684 [00:12<59:48,  5.26s/it]  
+  0%|          | 3/684 [00:13<40:21,  3.56s/it]
+  1%|          | 4/684 [00:15<31:35,  2.79s/it]
+  1%|          | 5/684 [00:16<26:33,  2.35s/it]
+100%|█████████▉| 683/684 [18:14<00:01,  1.58s/it]
+100%|██████████| 684/684 [18:15<00:00,  1.50s/it]INFO  HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+INFO  HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+
+                                                 
+
+100%|██████████| 684/684 [18:16<00:00,  1.50s/it]
+100%|██████████| 684/684 [18:16<00:00,  1.60s/it]
+INFO  HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+INFO  HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+INFO  Saved to data/speeches/Congress/tone/splits/label-weights/llama/llama_qlora_Llama-3.2-1B_s42_lr0.0002
+INFO  Evaluating on data/speeches/Congress/tone/splits/label-weights/dev.jsonlist
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001998', 'epoch': '0.2195'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001952', 'epoch': '0.4391'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001852', 'epoch': '0.6586'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001701', 'epoch': '0.8782'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.000151', 'epoch': '1.097'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001289', 'epoch': '1.316'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001051', 'epoch': '1.536'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '8.1e-05', 'epoch': '1.755'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '5.802e-05', 'epoch': '1.975'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '3.749e-05', 'epoch': '2.193'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '2.06e-05', 'epoch': '2.413'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '8.346e-06', 'epoch': '2.632'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '1.432e-06', 'epoch': '2.852'}
+{'train_runtime': '1097', 'train_samples_per_second': '9.966', 'train_steps_per_second': '0.624', 'train_loss': '0', 'epoch': '3'}
+
+Scoring: 100%|██████████| 46/46 [00:10<00:00,  5.44it/s]
+Scoring: 100%|██████████| 46/46 [00:10<00:00,  4.39it/s]
+INFO  Saved 364 predictions → data/speeches/Congress/tone/splits/label-weights/llama/llama_qlora_Llama-3.2-1B_s42_lr0.0002/preds_dev.tsv
+INFO  
+=== dev ===
+acc = 0.3242
+f1-anti = 0.3304
+f1-neutral = 0.2673
+f1-pro = 0.3630
+macro_f1 = 0.3202
+INFO  Evaluating on data/speeches/Congress/tone/splits/label-weights/test.jsonlist
+
+Scoring: 100%|██████████| 46/46 [00:10<00:00,  5.08it/s]
+Scoring: 100%|██████████| 46/46 [00:10<00:00,  4.50it/s]
+INFO  Saved 364 predictions → data/speeches/Congress/tone/splits/label-weights/llama/llama_qlora_Llama-3.2-1B_s42_lr0.0002/preds_test.tsv
+INFO  
+=== test ===
+acc = 0.3187
+f1-anti = 0.3122
+f1-neutral = 0.3592
+f1-pro = 0.2878
+macro_f1 = 0.3197
+=== Done ===
+---------------------------------------
+Begin Slurm Epilog: Apr-13-2026 09:11:28
+Job ID:        4818051
+User ID:       jvarma3
+Account:       coc
+Job name:      llama_qlora_tone
+Resources:     cpu=1,gres/gpu:rtx_6000=1,mem=16G,node=1
+Rsrc Used:     cput=00:20:49,vmem=0,walltime=00:20:49,mem=82720K,energy_used=0
+Partition:     coc-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-005-7-0
+---------------------------------------
