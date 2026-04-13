@@ -18,7 +18,11 @@ mkdir -p logs
 
 module load anaconda3
 conda activate llama
-PYTHON=$HOME/.conda/envs/llama/bin/python
+PYTHON=$HOME/scratch/envs/llama/bin/python
+
+# Redirect HuggingFace cache to scratch (home dir quota is too small for model weights)
+export HF_HOME=$HOME/scratch/hf_cache
+mkdir -p $HF_HOME
 
 echo "=== Caching Llama-3.1-8B ==="
 $PYTHON -c "
@@ -28,7 +32,7 @@ print('Model cached.')
 "
 
 echo "=== Training tone classifier (QLoRA) ==="
-srun $PYTHON -m classification.run_llama_qlora \
+srun --chdir=$SLURM_SUBMIT_DIR $PYTHON -m classification.run_llama_qlora \
     --model meta-llama/Llama-3.1-8B \
     --basedir data/speeches/Congress/tone/splits/label-weights/ \
     --train-file all.jsonlist \
