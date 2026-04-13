@@ -17,6 +17,7 @@ echo "Working directory: $(pwd)"
 mkdir -p logs
 
 module load anaconda3
+module load cuda/12.9.1
 conda activate llama
 
 # Redirect HuggingFace cache to scratch (home dir quota is too small for model weights)
