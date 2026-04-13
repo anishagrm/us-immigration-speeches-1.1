@@ -23,6 +23,10 @@ PYTHON=$HOME/scratch/envs/llama/bin/python
 # Redirect HuggingFace cache to scratch (home dir quota is too small for model weights)
 export HF_HOME=$HOME/scratch/hf_cache
 mkdir -p $HF_HOME
+# Copy token from default location if not already in scratch
+if [ -f $HOME/.cache/huggingface/token ] && [ ! -f $HF_HOME/token ]; then
+    cp $HOME/.cache/huggingface/token $HF_HOME/token
+fi
 
 echo "=== Caching Llama-3.1-8B ==="
 $PYTHON -c "
@@ -32,7 +36,7 @@ print('Model cached.')
 "
 
 echo "=== Training tone classifier (QLoRA) ==="
-srun --chdir=$SLURM_SUBMIT_DIR $PYTHON -m classification.run_llama_qlora \
+$PYTHON -m classification.run_llama_qlora \
     --model meta-llama/Llama-3.1-8B \
     --basedir data/speeches/Congress/tone/splits/label-weights/ \
     --train-file all.jsonlist \
