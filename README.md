@@ -6,6 +6,12 @@ Steps that I can remember:
 3. copy the /data dir to the cloned repo
 4.  Make a conda environment based on the requirements list below (this might be a bit finicky and might require awhile to figure out versions)
 
+# HuggingFace token setup (required for gated models e.g. Llama):
+- Create an account at huggingface.co
+- Go to huggingface.co/settings/tokens and create a token with Read permissions
+- Accept the model license at huggingface.co/meta-llama/Llama-3.1-8B
+- Log in locally: `conda activate <your-env>` then `hf auth login` and paste your token
+
 # Prep the data:
 5. run the 'Generating splits before training' steps below to create splits from inferred labels
 
