@@ -32,7 +32,7 @@ $HOME/scratch/envs/llama/bin/python -c "import torch; print(torch.__version__); 
 # Should print: 2.x.x+cu124 and 12.4
 ```
 Note: scratch storage persists across jobs but is wiped at semester end — back up results externally.
-Note: HuggingFace cache also goes to scratch to avoid filling home dir — set HF_HOME=$HOME/scratch/hf_cache before downloading models. The pace_train_llama.sh script does this automatically.
+Note: HuggingFace cache also goes to scratch to avoid filling home dir — set HF_HOME=$HOME/scratch/hf_cache before downloading models. The llama-runs/run1/pace_train_llama_tone.sh and llama-runs/run1/pace_train_llama_relevance.sh scripts do this automatically.
 Note: if home dir fills up, run `rm -rf $HOME/.cache/huggingface` to clear cached model weights from home.
 
 # HuggingFace token setup (required for gated models e.g. Llama):
@@ -77,7 +77,91 @@ This creates `all.jsonlist` and `folds/{0..9}/train|dev|test.jsonlist` under eac
 
 Experiment 1's training script is in pace_train.sh. run the training via sbatch <name of file>
 
-# Experiment 2:
+# Experiment 2: Fine-tuned Llama (QLoRA)
+
+Fine-tunes Llama-3.2-1B on the annotated corpus using QLoRA (4-bit NF4 + LoRA rank-16/alpha-16 on q_proj, v_proj). Unlike the encoder-based experiments, Llama receives the annotator guidelines verbatim in its prompt and classifies by comparing log-probabilities over label tokens — no classification head needed.
+
+Two tasks are supported: **tone** (anti / neutral / pro) and **relevance** (yes / no).
+
+### Environment setup
+
+Uses the `llama` conda env (Python 3.11), not `hum`. See the environment setup section at the top.
+
+Conda env packages needed:
+```bash
+pip install "transformers>=4.40" "peft>=0.10" bitsandbytes accelerate pandas numpy tqdm scikit-learn huggingface_hub
+pip install torch --index-url https://download.pytorch.org/whl/cu124
+```
+
+### Data
+
+**Tone:** `data/speeches/Congress/tone/splits/label-weights/`  
+**Relevance:** `data/speeches/Congress/relevance/splits/basic/`
+
+Each directory needs `all.jsonlist` (train), `dev.jsonlist`, and `test.jsonlist`. Generate these with the split generation step in "Prep the data" if missing.
+
+### Training on PACE
+
+```bash
+# Tone classifier (Llama-3.2-1B, 3 epochs, QLoRA)
+sbatch llama-runs/run1/pace_train_llama_tone.sh
+
+# Relevance classifier (Llama-3.2-1B, 3 epochs, QLoRA)
+sbatch llama-runs/run1/pace_train_llama_relevance.sh
+```
+
+Both scripts:
+- Download and cache the model to `$HOME/scratch/hf_cache` before training
+- Use batch size 4, gradient accumulation 4 (effective batch 16), lr 2e-4, cosine schedule
+- Save the fine-tuned LoRA adapter to `data/speeches/Congress/{task}/splits/{split}/llama/llama_qlora_Llama-3.2-1B_s42_lr0.0002/`
+
+### Running manually
+
+```bash
+# Tone
+python -m classification.run_llama_qlora \
+    --model meta-llama/Llama-3.2-1B \
+    --basedir data/speeches/Congress/tone/splits/label-weights/ \
+    --train-file all.jsonlist --dev-file dev.jsonlist --test-file test.jsonlist \
+    --output-prefix llama_qlora \
+    --do-train --do-eval \
+    --n-epochs 3 --lr 2e-4 --batch-size 4 --grad-accum 4 \
+    --lora-rank 16 --lora-alpha 16 --max-seq-length 512 --seed 42
+
+# Relevance
+python -m classification.run_llama_qlora_relevance \
+    --model meta-llama/Llama-3.2-1B \
+    --basedir data/speeches/Congress/relevance/splits/basic/ \
+    --train-file all.jsonlist --dev-file dev.jsonlist --test-file test.jsonlist \
+    --output-prefix llama_qlora \
+    --do-train --do-eval \
+    --n-epochs 3 --lr 2e-4 --batch-size 4 --grad-accum 4 \
+    --lora-rank 16 --lora-alpha 16 --max-seq-length 512 --seed 42
+```
+
+### Eval-only from saved checkpoint
+
+```bash
+python -m classification.run_llama_qlora \
+    --model meta-llama/Llama-3.2-1B \
+    --checkpoint data/speeches/Congress/tone/splits/label-weights/llama/llama_qlora_Llama-3.2-1B_s42_lr0.0002 \
+    --basedir data/speeches/Congress/tone/splits/label-weights/ \
+    --dev-file dev.jsonlist --test-file test.jsonlist \
+    --do-eval --seed 42
+```
+
+### Output
+
+Predictions and metrics are written to the output dir:
+- `preds_dev.tsv` / `preds_test.tsv` — predicted label indices and class probabilities
+- `eval_results_dev.txt` / `eval_results_test.txt` — accuracy, per-class F1, macro-F1
+
+### Notes
+
+- 4-bit quantization requires CUDA; MPS/CPU automatically fall back to fp16/fp32 full precision
+- Classification is done via log-probability comparison over label tokens at the last prompt position — no additional classification head
+- Tone label tokens: `negative` (anti), `neutral`, `positive` (pro)
+- Relevance label tokens: `no`, `yes`
 
 
 # Experiment 3: Temporal Generalization
