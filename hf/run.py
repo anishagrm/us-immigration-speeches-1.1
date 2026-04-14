@@ -69,8 +69,11 @@ from hf.processors import convert_examples_to_features, GenericSingleProcessorWe
 
 try:
     from torch.utils.tensorboard import SummaryWriter
-except ImportError:
-    from tensorboardX import SummaryWriter
+except (ImportError, ModuleNotFoundError):
+    try:
+        from tensorboardX import SummaryWriter
+    except (ImportError, ModuleNotFoundError):
+        SummaryWriter = None
 
 
 logger = logging.getLogger(__name__)
