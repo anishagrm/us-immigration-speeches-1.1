@@ -19,7 +19,7 @@ import os
 import json
 import logging
 
-from transformers.file_utils import is_tf_available
+from transformers.utils import is_tf_available
 from transformers.data.processors.utils import InputExample, InputFeatures
 from hf.utils import InputFeaturesWeighted
 import numpy as np
