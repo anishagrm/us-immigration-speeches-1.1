@@ -1,0 +1,106 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-08-2026 20:04:30
+Job ID:    4629365
+User ID:   agurram9
+Account:   coc
+Job name:  roosebert_imm
+Partition: coc-gpu
+QOS:       coc-ice
+---------------------------------------
+
+CondaError: Run 'conda init' before 'conda deactivate'
+
+=== Caching model ===
+Fetching 6 files:   0%|          | 0/6 [00:00<?, ?it/s]Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Fetching 6 files:  17%|█▋        | 1/6 [00:00<00:04,  1.02it/s]Fetching 6 files:  50%|█████     | 3/6 [00:08<00:09,  3.12s/it]Fetching 6 files: 100%|██████████| 6/6 [00:08<00:00,  1.45s/it]
+=== Training relevance classifier ===
+Traceback (most recent call last):
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 35, in <module>
+    from transformers import (
+ImportError: cannot import name 'AdamW' from 'transformers' (/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/transformers/__init__.py)
+Traceback (most recent call last):
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 35, in <module>
+    from transformers import (
+ImportError: cannot import name 'AdamW' from 'transformers' (/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/transformers/__init__.py)
+Traceback (most recent call last):
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 35, in <module>
+    from transformers import (
+ImportError: cannot import name 'AdamW' from 'transformers' (/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/transformers/__init__.py)
+Traceback (most recent call last):
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 35, in <module>
+    from transformers import (
+ImportError: cannot import name 'AdamW' from 'transformers' (/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/transformers/__init__.py)
+/home/hice1/agurram9/.conda/envs/roosebert/bin/python3 -m hf.run --model_type bert --model_name_or_path ddore14/RooseBERT-cont-uncased --tokenizer_name  --name  --do_train --train all.jsonlist --data_dir data/speeches/Congress/relevance/splits/basic/ --max_seq_length 512 --per_gpu_eval_batch_size=8 --per_gpu_train_batch_size=8 --learning_rate 2e-05 --num_train_epochs 7 --output_dir data/speeches/Congress/relevance/splits/basic/bert/roosebert_RooseBERT-cont-uncased_s42_lr2e-05_msl512 --overwrite_cache --overwrite_output_dir --weight_field weight --metrics accuracy,f1 --seed 42 --do_lower_case
+/home/hice1/agurram9/.conda/envs/roosebert/bin/python3 -m hf.run --model_type bert --model_name_or_path ddore14/RooseBERT-cont-uncased --tokenizer_name  --name  --do_train --train all.jsonlist --data_dir data/speeches/Congress/relevance/splits/basic/ --max_seq_length 512 --per_gpu_eval_batch_size=8 --per_gpu_train_batch_size=8 --learning_rate 2e-05 --num_train_epochs 7 --output_dir data/speeches/Congress/relevance/splits/basic/bert/roosebert_RooseBERT-cont-uncased_s42_lr2e-05_msl512 --overwrite_cache --overwrite_output_dir --weight_field weight --metrics accuracy,f1 --seed 42 --do_lower_case
+/home/hice1/agurram9/.conda/envs/roosebert/bin/python3 -m hf.run --model_type bert --model_name_or_path ddore14/RooseBERT-cont-uncased --tokenizer_name  --name  --do_train --train all.jsonlist --data_dir data/speeches/Congress/relevance/splits/basic/ --max_seq_length 512 --per_gpu_eval_batch_size=8 --per_gpu_train_batch_size=8 --learning_rate 2e-05 --num_train_epochs 7 --output_dir data/speeches/Congress/relevance/splits/basic/bert/roosebert_RooseBERT-cont-uncased_s42_lr2e-05_msl512 --overwrite_cache --overwrite_output_dir --weight_field weight --metrics accuracy,f1 --seed 42 --do_lower_case
+/home/hice1/agurram9/.conda/envs/roosebert/bin/python3 -m hf.run --model_type bert --model_name_or_path ddore14/RooseBERT-cont-uncased --tokenizer_name  --name  --do_train --train all.jsonlist --data_dir data/speeches/Congress/relevance/splits/basic/ --max_seq_length 512 --per_gpu_eval_batch_size=8 --per_gpu_train_batch_size=8 --learning_rate 2e-05 --num_train_epochs 7 --output_dir data/speeches/Congress/relevance/splits/basic/bert/roosebert_RooseBERT-cont-uncased_s42_lr2e-05_msl512 --overwrite_cache --overwrite_output_dir --weight_field weight --metrics accuracy,f1 --seed 42 --do_lower_case
+=== Training tone classifier ===
+Traceback (most recent call last):
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 35, in <module>
+    from transformers import (
+ImportError: cannot import name 'AdamW' from 'transformers' (/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/transformers/__init__.py)
+Traceback (most recent call last):
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 35, in <module>
+    from transformers import (
+ImportError: cannot import name 'AdamW' from 'transformers' (/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/transformers/__init__.py)
+Traceback (most recent call last):
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 35, in <module>
+    from transformers import (
+ImportError: cannot import name 'AdamW' from 'transformers' (/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/transformers/__init__.py)
+Traceback (most recent call last):
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 35, in <module>
+    from transformers import (
+ImportError: cannot import name 'AdamW' from 'transformers' (/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/transformers/__init__.py)
+roosebert_s42_lr2e-05_msl512
+/home/hice1/agurram9/.conda/envs/roosebert/bin/python3 -m hf.run --model_type bert --model_name_or_path ddore14/RooseBERT-cont-uncased --tokenizer_name  --name  --do_train --train all.jsonlist --data_dir data/speeches/Congress/tone/splits/label-weights/ --max_seq_length 512 --per_gpu_eval_batch_size=8 --per_gpu_train_batch_size=8 --learning_rate 2e-05 --num_train_epochs 7 --output_dir data/speeches/Congress/tone/splits/label-weights/bert/roosebert_s42_lr2e-05_msl512 --overwrite_cache --overwrite_output_dir --weight_field weight --metrics accuracy,per_class_f1 --seed 42 --do_lower_case
+roosebert_s42_lr2e-05_msl512
+/home/hice1/agurram9/.conda/envs/roosebert/bin/python3 -m hf.run --model_type bert --model_name_or_path ddore14/RooseBERT-cont-uncased --tokenizer_name  --name  --do_train --train all.jsonlist --data_dir data/speeches/Congress/tone/splits/label-weights/ --max_seq_length 512 --per_gpu_eval_batch_size=8 --per_gpu_train_batch_size=8 --learning_rate 2e-05 --num_train_epochs 7 --output_dir data/speeches/Congress/tone/splits/label-weights/bert/roosebert_s42_lr2e-05_msl512 --overwrite_cache --overwrite_output_dir --weight_field weight --metrics accuracy,per_class_f1 --seed 42 --do_lower_case
+roosebert_s42_lr2e-05_msl512
+/home/hice1/agurram9/.conda/envs/roosebert/bin/python3 -m hf.run --model_type bert --model_name_or_path ddore14/RooseBERT-cont-uncased --tokenizer_name  --name  --do_train --train all.jsonlist --data_dir data/speeches/Congress/tone/splits/label-weights/ --max_seq_length 512 --per_gpu_eval_batch_size=8 --per_gpu_train_batch_size=8 --learning_rate 2e-05 --num_train_epochs 7 --output_dir data/speeches/Congress/tone/splits/label-weights/bert/roosebert_s42_lr2e-05_msl512 --overwrite_cache --overwrite_output_dir --weight_field weight --metrics accuracy,per_class_f1 --seed 42 --do_lower_case
+roosebert_s42_lr2e-05_msl512
+/home/hice1/agurram9/.conda/envs/roosebert/bin/python3 -m hf.run --model_type bert --model_name_or_path ddore14/RooseBERT-cont-uncased --tokenizer_name  --name  --do_train --train all.jsonlist --data_dir data/speeches/Congress/tone/splits/label-weights/ --max_seq_length 512 --per_gpu_eval_batch_size=8 --per_gpu_train_batch_size=8 --learning_rate 2e-05 --num_train_epochs 7 --output_dir data/speeches/Congress/tone/splits/label-weights/bert/roosebert_s42_lr2e-05_msl512 --overwrite_cache --overwrite_output_dir --weight_field weight --metrics accuracy,per_class_f1 --seed 42 --do_lower_case
+=== Done ===
+---------------------------------------
+Begin Slurm Epilog: Apr-08-2026 20:06:06
+Job ID:        4629365
+User ID:       agurram9
+Account:       coc
+Job name:      roosebert_imm
+Resources:     cpu=4,gres/gpu:v100=1,mem=16G,node=1
+Rsrc Used:     cput=00:06:24,vmem=0,walltime=00:01:36,mem=559684K,energy_used=0
+Partition:     coc-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-002-6-0
+---------------------------------------

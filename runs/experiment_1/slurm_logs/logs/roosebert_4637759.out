@@ -1,0 +1,151 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-09-2026 15:27:13
+Job ID:    4637759
+User ID:   agurram9
+Account:   coc
+Job name:  roosebert_imm
+Partition: ice-bw-gpu
+QOS:       coc-ice
+---------------------------------------
+
+CondaError: Run 'conda init' before 'conda deactivate'
+
+=== Caching model ===
+Fetching 6 files:   0%|          | 0/6 [00:00<?, ?it/s]Fetching 6 files: 100%|██████████| 6/6 [00:00<00:00, 69327.34it/s]
+=== Training relevance classifier ===
+04/09/2026 15:28:44 - WARNING - __main__ -   Process rank: -1, device: cuda, n_gpu: 1, distributed training: False, 16-bits training: False
+/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/huggingface_hub/file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Some weights of the model checkpoint at ddore14/RooseBERT-cont-uncased were not used when initializing BertForSequenceClassification: ['cls.predictions.decoder.weight', 'cls.predictions.decoder.bias', 'cls.predictions.transform.dense.bias', 'cls.predictions.transform.LayerNorm.bias', 'cls.predictions.transform.LayerNorm.weight', 'cls.predictions.transform.dense.weight', 'cls.predictions.bias']
+- This IS expected if you are initializing BertForSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing BertForSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of BertForSequenceClassification were not initialized from the model checkpoint at ddore14/RooseBERT-cont-uncased and are newly initialized: ['classifier.bias', 'bert.pooler.dense.weight', 'bert.pooler.dense.bias', 'classifier.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/torch/cuda/__init__.py:230: UserWarning: 
+NVIDIA RTX PRO 6000 Blackwell Server Edition MIG 2g.48gb with CUDA capability sm_120 is not compatible with the current PyTorch installation.
+The current PyTorch install supports CUDA capabilities sm_50 sm_60 sm_70 sm_75 sm_80 sm_86 sm_90.
+If you want to use the NVIDIA RTX PRO 6000 Blackwell Server Edition MIG 2g.48gb GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+  warnings.warn(
+04/09/2026 15:28:49 - INFO - __main__ -   Training/evaluation parameters Namespace(model_type='bert', model_name_or_path='ddore14/RooseBERT-cont-uncased', name='', data_dir='data/speeches/Congress/relevance/splits/basic/', train='all.jsonlist', dev='dev.jsonlist', test='test.jsonlist', test_data_dir=None, output_dir='data/speeches/Congress/relevance/splits/basic/bert/roosebert_RooseBERT-cont-uncased_s42_lr2e-05_msl512', text_field='text', text_field_b=None, label_field='label', weight_field='weight', metrics='accuracy,f1', config_name='', tokenizer_name='', cache_dir='', max_seq_length=512, do_train=True, do_eval=False, eval_partition='dev', predict=None, default_label=None, pred_file_name='preds', evaluate_during_training=False, do_lower_case=True, per_gpu_train_batch_size=8, per_gpu_eval_batch_size=8, gradient_accumulation_steps=1, learning_rate=2e-05, weight_decay=0.0, adam_epsilon=1e-08, max_grad_norm=1.0, num_train_epochs=7.0, max_steps=-1, warmup_steps=0, logging_steps=500, save_steps=0, eval_all_checkpoints=False, no_cuda=False, overwrite_output_dir=True, overwrite_cache=True, seed=42, fp16=False, fp16_opt_level='O1', local_rank=-1, server_ip='', server_port='', n_gpu=1, device=device(type='cuda'), num_labels=2, output_mode='classification')
+04/09/2026 15:28:49 - INFO - __main__ -   Creating features from dataset file at data/speeches/Congress/relevance/splits/basic/
+04/09/2026 15:28:51 - INFO - hf.processors -   *** Example 0 ***
+04/09/2026 15:28:51 - INFO - hf.processors -   guid: train-0
+04/09/2026 15:28:51 - INFO - hf.processors -   example text_a: Secondly. "qualifications:" what are they? Tley are resilence. age. and nine years citizenship. and they are nothing more. This is so stated by the Senator from Iudiana. the Senator frito Ohio. [Mr. Triun.qx.] the Senator front Missouri.
+04/09/2026 15:28:51 - INFO - hf.processors -   example text_b: None
+04/09/2026 15:28:51 - INFO - hf.processors -   input_ids: 101 16378 1012 1000 15644 1024 1000 2054 2024 2027 1029 1056 3051 2024 24501 9463 5897 1012 2287 1012 1998 3157 2086 9068 1012 1998 2027 2024 2498 2062 1012 2023 2003 2061 3090 2011 1996 5205 2013 1045 21041 5162 1012 1996 5205 10424 9956 4058 1012 1031 2720 1012 13012 4609 1012 1053 2595 1012 1033 1996 5205 2392 5284 1012 102 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/09/2026 15:28:51 - INFO - hf.processors -   attention_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/09/2026 15:28:51 - INFO - hf.processors -   label: no (id = 0)
+04/09/2026 15:28:51 - INFO - __main__ -   Saving features into cached file data/speeches/Congress/relevance/splits/basic/cached_train_RooseBERT-cont-uncased_512_
+04/09/2026 15:29:05 - INFO - __main__ -   ***** Running training *****
+04/09/2026 15:29:05 - INFO - __main__ -     Num examples = 7626
+04/09/2026 15:29:05 - INFO - __main__ -     Num Epochs = 7
+04/09/2026 15:29:05 - INFO - __main__ -     Instantaneous batch size per GPU = 8
+04/09/2026 15:29:05 - INFO - __main__ -     Total train batch size (w. parallel, distributed & accumulation) = 8
+04/09/2026 15:29:05 - INFO - __main__ -     Gradient Accumulation steps = 1
+04/09/2026 15:29:05 - INFO - __main__ -     Total optimization steps = 6678
+['no', 'yes']
+Constructing processor:
+Label list: ['no', 'yes']
+Label field: label
+Text fields: text None
+Weight field: weight
+Num labels: 2
+config ddore14/RooseBERT-cont-uncased
+tokenizer ddore14/RooseBERT-cont-uncased
+model ddore14/RooseBERT-cont-uncased
+cached_features_file: data/speeches/Congress/relevance/splits/basic/cached_train_RooseBERT-cont-uncased_512_
+True
+Epoch:   0%|          | 0/7 [00:00<?, ?it/s]
+Iteration:   0%|          | 0/954 [00:00<?, ?it/s][AIteration:   0%|          | 0/954 [00:01<?, ?it/s]
+Epoch:   0%|          | 0/7 [00:01<?, ?it/s]
+Traceback (most recent call last):
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 1022, in <module>
+    main()
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 927, in main
+    global_step, tr_loss = train(args, train_dataset, model, tokenizer, label_list)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 218, in train
+    outputs = model(**inputs)
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/transformers/models/bert/modeling_bert.py", line 1562, in forward
+    outputs = self.bert(
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/transformers/models/bert/modeling_bert.py", line 993, in forward
+    extended_attention_mask: torch.Tensor = self.get_extended_attention_mask(attention_mask, input_shape)
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/transformers/modeling_utils.py", line 911, in get_extended_attention_mask
+    extended_attention_mask = extended_attention_mask.to(dtype=dtype)  # fp16 compatibility
+RuntimeError: CUDA error: no kernel image is available for execution on the device
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+/home/hice1/agurram9/.conda/envs/roosebert/bin/python3 -m hf.run --model_type bert --model_name_or_path ddore14/RooseBERT-cont-uncased --tokenizer_name  --name  --do_train --train all.jsonlist --data_dir data/speeches/Congress/relevance/splits/basic/ --max_seq_length 512 --per_gpu_eval_batch_size=8 --per_gpu_train_batch_size=8 --learning_rate 2e-05 --num_train_epochs 7 --output_dir data/speeches/Congress/relevance/splits/basic/bert/roosebert_RooseBERT-cont-uncased_s42_lr2e-05_msl512 --overwrite_cache --overwrite_output_dir --weight_field weight --metrics accuracy,f1 --seed 42 --save_steps 0 --do_lower_case
+=== Training tone classifier ===
+04/09/2026 15:29:16 - WARNING - __main__ -   Process rank: -1, device: cuda, n_gpu: 1, distributed training: False, 16-bits training: False
+/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/huggingface_hub/file_download.py:949: FutureWarning: `resume_download` is deprecated and will be removed in version 1.0.0. Downloads always resume when possible. If you want to force a new download, use `force_download=True`.
+  warnings.warn(
+Some weights of the model checkpoint at ddore14/RooseBERT-cont-uncased were not used when initializing BertForSequenceClassification: ['cls.predictions.decoder.bias', 'cls.predictions.bias', 'cls.predictions.transform.LayerNorm.bias', 'cls.predictions.decoder.weight', 'cls.predictions.transform.dense.bias', 'cls.predictions.transform.LayerNorm.weight', 'cls.predictions.transform.dense.weight']
+- This IS expected if you are initializing BertForSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing BertForSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of BertForSequenceClassification were not initialized from the model checkpoint at ddore14/RooseBERT-cont-uncased and are newly initialized: ['classifier.weight', 'bert.pooler.dense.bias', 'bert.pooler.dense.weight', 'classifier.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/torch/cuda/__init__.py:230: UserWarning: 
+NVIDIA RTX PRO 6000 Blackwell Server Edition MIG 2g.48gb with CUDA capability sm_120 is not compatible with the current PyTorch installation.
+The current PyTorch install supports CUDA capabilities sm_50 sm_60 sm_70 sm_75 sm_80 sm_86 sm_90.
+If you want to use the NVIDIA RTX PRO 6000 Blackwell Server Edition MIG 2g.48gb GPU with PyTorch, please check the instructions at https://pytorch.org/get-started/locally/
+
+  warnings.warn(
+04/09/2026 15:29:17 - INFO - __main__ -   Training/evaluation parameters Namespace(model_type='bert', model_name_or_path='ddore14/RooseBERT-cont-uncased', name='', data_dir='data/speeches/Congress/tone/splits/label-weights/', train='all.jsonlist', dev='dev.jsonlist', test='test.jsonlist', test_data_dir=None, output_dir='data/speeches/Congress/tone/splits/label-weights/bert/roosebert_s42_lr2e-05_msl512', text_field='text', text_field_b=None, label_field='label', weight_field='weight', metrics='accuracy,per_class_f1', config_name='', tokenizer_name='', cache_dir='', max_seq_length=512, do_train=True, do_eval=False, eval_partition='dev', predict=None, default_label=None, pred_file_name='preds', evaluate_during_training=False, do_lower_case=True, per_gpu_train_batch_size=8, per_gpu_eval_batch_size=8, gradient_accumulation_steps=1, learning_rate=2e-05, weight_decay=0.0, adam_epsilon=1e-08, max_grad_norm=1.0, num_train_epochs=7.0, max_steps=-1, warmup_steps=0, logging_steps=500, save_steps=0, eval_all_checkpoints=False, no_cuda=False, overwrite_output_dir=True, overwrite_cache=True, seed=42, fp16=False, fp16_opt_level='O1', local_rank=-1, server_ip='', server_port='', n_gpu=1, device=device(type='cuda'), num_labels=3, output_mode='classification')
+04/09/2026 15:29:17 - INFO - __main__ -   Creating features from dataset file at data/speeches/Congress/tone/splits/label-weights/
+Traceback (most recent call last):
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 1022, in <module>
+    main()
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 926, in main
+    train_dataset = load_and_cache_examples(args, args.name, processor, tokenizer, evaluate=False, pred_target=None)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 549, in load_and_cache_examples
+    examples = processor.get_train_examples(os.path.join(args.data_dir, args.train))
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/processors.py", line 128, in get_train_examples
+    return self._create_examples(self._read_jsonl(data_file), "train")
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/processors.py", line 168, in _create_examples
+    weight = float(line[self._weight_field])
+KeyError: 'weight'
+['anti', 'neutral', 'pro']
+Constructing processor:
+Label list: ['anti', 'neutral', 'pro']
+Label field: label
+Text fields: text None
+Weight field: weight
+Num labels: 3
+config ddore14/RooseBERT-cont-uncased
+tokenizer ddore14/RooseBERT-cont-uncased
+model ddore14/RooseBERT-cont-uncased
+cached_features_file: data/speeches/Congress/tone/splits/label-weights/cached_train_RooseBERT-cont-uncased_512_
+False
+roosebert_s42_lr2e-05_msl512
+/home/hice1/agurram9/.conda/envs/roosebert/bin/python3 -m hf.run --model_type bert --model_name_or_path ddore14/RooseBERT-cont-uncased --tokenizer_name  --name  --do_train --train all.jsonlist --data_dir data/speeches/Congress/tone/splits/label-weights/ --max_seq_length 512 --per_gpu_eval_batch_size=8 --per_gpu_train_batch_size=8 --learning_rate 2e-05 --num_train_epochs 7 --output_dir data/speeches/Congress/tone/splits/label-weights/bert/roosebert_s42_lr2e-05_msl512 --overwrite_cache --overwrite_output_dir --weight_field weight --metrics accuracy,per_class_f1 --seed 42 --save_steps 0 --do_lower_case
+---------------------------------------
+Begin Slurm Epilog: Apr-09-2026 15:29:20
+Job ID:        4637759
+User ID:       agurram9
+Account:       coc
+Job name:      roosebert_imm
+Resources:     cpu=1,gres/gpu:rtx_pro_6000_blackwell=1,mem=16G,node=1
+Rsrc Used:     cput=00:02:07,vmem=0,walltime=00:02:07,mem=62280K,energy_used=0
+Partition:     ice-bw-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-02-003-31-0
+---------------------------------------

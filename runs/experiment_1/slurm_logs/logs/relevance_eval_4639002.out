@@ -1,0 +1,112 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-09-2026 22:25:30
+Job ID:    4639002
+User ID:   agurram9
+Account:   coc
+Job name:  relevance_eval
+Partition: coc-gpu
+QOS:       coc-ice
+---------------------------------------
+=== Relevance eval: RoBERTa ===
+04/09/2026 22:27:01 - WARNING - __main__ -   Process rank: -1, device: cuda, n_gpu: 1, distributed training: False, 16-bits training: False
+/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/transformers/modeling_utils.py:463: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  return torch.load(checkpoint_file, map_location="cpu")
+04/09/2026 22:27:10 - INFO - __main__ -   Training/evaluation parameters Namespace(model_type='roberta', model_name_or_path='data/speeches/Congress/relevance/splits/basic/compare/roberta-base', name='compare', data_dir='data/speeches/Congress/relevance/splits/basic', train='train.jsonlist', dev='dev.jsonlist', test='test.jsonlist', test_data_dir=None, output_dir='data/speeches/Congress/relevance/splits/basic/compare/roberta-base', text_field='text', text_field_b=None, label_field='label', weight_field='weight', metrics='accuracy,f1', config_name='', tokenizer_name='', cache_dir='', max_seq_length=400, do_train=False, do_eval=True, eval_partition='test', predict=None, default_label=None, pred_file_name='preds', evaluate_during_training=False, do_lower_case=False, per_gpu_train_batch_size=8, per_gpu_eval_batch_size=8, gradient_accumulation_steps=1, learning_rate=5e-05, weight_decay=0.0, adam_epsilon=1e-08, max_grad_norm=1.0, num_train_epochs=3.0, max_steps=-1, warmup_steps=0, logging_steps=500, save_steps=500, eval_all_checkpoints=False, no_cuda=False, overwrite_output_dir=False, overwrite_cache=True, seed=42, fp16=False, fp16_opt_level='O1', local_rank=-1, server_ip='', server_port='', n_gpu=1, device=device(type='cuda'), num_labels=2, output_mode='classification')
+04/09/2026 22:27:10 - INFO - __main__ -   Evaluate the following checkpoints: ['data/speeches/Congress/relevance/splits/basic/compare/roberta-base']
+04/09/2026 22:27:11 - INFO - __main__ -   Creating features from dataset file at data/speeches/Congress/relevance/splits/basic
+04/09/2026 22:27:12 - INFO - hf.processors -   *** Example 0 ***
+04/09/2026 22:27:12 - INFO - hf.processors -   guid: test-0
+04/09/2026 22:27:12 - INFO - hf.processors -   example text_a: I will ask him. furthermore. whether he has not in his hand an exact copy of the invitation issued to the United States by the countries I have named. to show the precise character of what these invitations amount to. and whether or not the expenses of individuals who are asked is expected to be borne by the United States Government or by the government extending the invitation? -
+04/09/2026 22:27:12 - INFO - hf.processors -   example text_b: None
+04/09/2026 22:27:12 - INFO - hf.processors -   input_ids: 0 100 40 1394 123 4 43681 4 549 37 34 45 11 39 865 41 6089 5375 9 5 10021 1167 7 5 315 532 30 5 749 38 33 1440 4 7 311 5 12548 2048 9 99 209 30790 1280 7 4 8 549 50 45 5 4068 9 2172 54 32 553 16 421 7 28 26531 30 5 315 532 1621 50 30 5 168 9148 5 10021 116 111 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+04/09/2026 22:27:12 - INFO - hf.processors -   attention_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/09/2026 22:27:12 - INFO - hf.processors -   label: no (id = 0)
+04/09/2026 22:27:12 - INFO - __main__ -   Saving features into cached file data/speeches/Congress/relevance/splits/basic/cached_test.jsonlist_roberta-base_400_compare
+04/09/2026 22:27:13 - INFO - __main__ -   ***** Running evaluation  *****
+04/09/2026 22:27:13 - INFO - __main__ -     Num examples = 762
+04/09/2026 22:27:13 - INFO - __main__ -     Batch size = 8
+['no', 'yes']
+Constructing processor:
+Label list: ['no', 'yes']
+Label field: label
+Text fields: text None
+Weight field: weight
+Num labels: 2
+config data/speeches/Congress/relevance/splits/basic/compare/roberta-base
+tokenizer data/speeches/Congress/relevance/splits/basic/compare/roberta-base
+model data/speeches/Congress/relevance/splits/basic/compare/roberta-base
+Do evaluation:
+checkpoint: data/speeches/Congress/relevance/splits/basic/compare/roberta-base
+['accuracy', 'f1']
+cached_features_file: data/speeches/Congress/relevance/splits/basic/cached_test.jsonlist_roberta-base_400_compare
+True
+num examples: 762
+example:
+InputExampleWeighted(guid='test-0', text_a='I will ask him. furthermore. whether he has not in his hand an exact copy of the invitation issued to the United States by the countries I have named. to show the precise character of what these invitations amount to. and whether or not the expenses of individuals who are asked is expected to be borne by the United States Government or by the government extending the invitation? -', text_b=None, label='no')
+Evaluating:   0%|          | 0/96 [00:00<?, ?it/s]Evaluating:   1%|          | 1/96 [00:05<09:23,  5.93s/it]Evaluating:   3%|▎         | 3/96 [00:06<02:27,  1.59s/it]Evaluating:   5%|▌         | 5/96 [00:06<01:13,  1.24it/s]Evaluating:   7%|▋         | 7/96 [00:06<00:43,  2.04it/s]Evaluating:   9%|▉         | 9/96 [00:06<00:28,  3.03it/s]Evaluating:  11%|█▏        | 11/96 [00:06<00:20,  4.24it/s]Evaluating:  14%|█▎        | 13/96 [00:06<00:14,  5.62it/s]Evaluating:  16%|█▌        | 15/96 [00:06<00:11,  7.11it/s]Evaluating:  18%|█▊        | 17/96 [00:06<00:09,  8.64it/s]Evaluating:  20%|█▉        | 19/96 [00:07<00:07, 10.09it/s]Evaluating:  22%|██▏       | 21/96 [00:07<00:06, 11.40it/s]Evaluating:  24%|██▍       | 23/96 [00:07<00:05, 12.52it/s]Evaluating:  26%|██▌       | 25/96 [00:07<00:05, 13.43it/s]Evaluating:  28%|██▊       | 27/96 [00:07<00:04, 14.14it/s]Evaluating:  30%|███       | 29/96 [00:07<00:04, 14.68it/s]Evaluating:  32%|███▏      | 31/96 [00:07<00:04, 15.09it/s]Evaluating:  34%|███▍      | 33/96 [00:07<00:04, 15.38it/s]Evaluating:  36%|███▋      | 35/96 [00:08<00:03, 15.60it/s]Evaluating:  39%|███▊      | 37/96 [00:08<00:03, 15.76it/s]Evaluating:  41%|████      | 39/96 [00:08<00:03, 15.87it/s]Evaluating:  43%|████▎     | 41/96 [00:08<00:03, 15.94it/s]Evaluating:  45%|████▍     | 43/96 [00:08<00:03, 15.99it/s]Evaluating:  47%|████▋     | 45/96 [00:08<00:03, 16.03it/s]Evaluating:  49%|████▉     | 47/96 [00:08<00:03, 16.06it/s]Evaluating:  51%|█████     | 49/96 [00:08<00:02, 16.07it/s]Evaluating:  53%|█████▎    | 51/96 [00:09<00:02, 16.09it/s]Evaluating:  55%|█████▌    | 53/96 [00:09<00:02, 16.10it/s]Evaluating:  57%|█████▋    | 55/96 [00:09<00:02, 16.11it/s]Evaluating:  59%|█████▉    | 57/96 [00:09<00:02, 16.11it/s]Evaluating:  61%|██████▏   | 59/96 [00:09<00:02, 16.11it/s]Evaluating:  64%|██████▎   | 61/96 [00:09<00:02, 16.12it/s]Evaluating:  66%|██████▌   | 63/96 [00:09<00:02, 16.12it/s]Evaluating:  68%|██████▊   | 65/96 [00:09<00:01, 16.12it/s]Evaluating:  70%|██████▉   | 67/96 [00:10<00:01, 16.12it/s]Evaluating:  72%|███████▏  | 69/96 [00:10<00:01, 16.12it/s]Evaluating:  74%|███████▍  | 71/96 [00:10<00:01, 16.12it/s]Evaluating:  76%|███████▌  | 73/96 [00:10<00:01, 16.12it/s]Evaluating:  78%|███████▊  | 75/96 [00:10<00:01, 16.12it/s]Evaluating:  80%|████████  | 77/96 [00:10<00:01, 16.12it/s]Evaluating:  82%|████████▏ | 79/96 [00:10<00:01, 16.12it/s]Evaluating:  84%|████████▍ | 81/96 [00:10<00:00, 16.12it/s]Evaluating:  86%|████████▋ | 83/96 [00:11<00:00, 16.12it/s]Evaluating:  89%|████████▊ | 85/96 [00:11<00:00, 16.12it/s]Evaluating:  91%|█████████ | 87/96 [00:11<00:00, 16.12it/s]Evaluating:  93%|█████████▎| 89/96 [00:11<00:00, 16.12it/s]Evaluating:  95%|█████████▍| 91/96 [00:11<00:00, 16.12it/s]Evaluating:  97%|█████████▋| 93/96 [00:11<00:00, 16.11it/s]Evaluating:  99%|█████████▉| 95/96 [00:11<00:00, 16.11it/s]Evaluating: 100%|██████████| 96/96 [00:11<00:00,  8.13it/s]
+04/09/2026 22:27:25 - INFO - __main__ -   ***** Eval results  *****
+04/09/2026 22:27:25 - INFO - __main__ -     acc = 0.8937007874015748
+04/09/2026 22:27:25 - INFO - __main__ -     f1 = 0.8870484852379454
+Instance weight shape: (762,)
+(762,)
+(762,)
+accuracy 2
+f1 2
+=== Relevance eval: RooseBERT ===
+04/09/2026 22:27:34 - WARNING - __main__ -   Process rank: -1, device: cuda, n_gpu: 1, distributed training: False, 16-bits training: False
+/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/transformers/modeling_utils.py:463: FutureWarning: You are using `torch.load` with `weights_only=False` (the current default value), which uses the default pickle module implicitly. It is possible to construct malicious pickle data which will execute arbitrary code during unpickling (See https://github.com/pytorch/pytorch/blob/main/SECURITY.md#untrusted-models for more details). In a future release, the default value for `weights_only` will be flipped to `True`. This limits the functions that could be executed during unpickling. Arbitrary objects will no longer be allowed to be loaded via this mode unless they are explicitly allowlisted by the user via `torch.serialization.add_safe_globals`. We recommend you start setting `weights_only=True` for any use case where you don't have full control of the loaded file. Please open an issue on GitHub for any issues related to this experimental feature.
+  return torch.load(checkpoint_file, map_location="cpu")
+04/09/2026 22:27:40 - INFO - __main__ -   Training/evaluation parameters Namespace(model_type='bert', model_name_or_path='data/speeches/Congress/relevance/splits/basic/compare/roosebert', name='compare', data_dir='data/speeches/Congress/relevance/splits/basic', train='train.jsonlist', dev='dev.jsonlist', test='test.jsonlist', test_data_dir=None, output_dir='data/speeches/Congress/relevance/splits/basic/compare/roosebert', text_field='text', text_field_b=None, label_field='label', weight_field='weight', metrics='accuracy,f1', config_name='', tokenizer_name='', cache_dir='', max_seq_length=512, do_train=False, do_eval=True, eval_partition='test', predict=None, default_label=None, pred_file_name='preds', evaluate_during_training=False, do_lower_case=True, per_gpu_train_batch_size=8, per_gpu_eval_batch_size=8, gradient_accumulation_steps=1, learning_rate=5e-05, weight_decay=0.0, adam_epsilon=1e-08, max_grad_norm=1.0, num_train_epochs=3.0, max_steps=-1, warmup_steps=0, logging_steps=500, save_steps=500, eval_all_checkpoints=False, no_cuda=False, overwrite_output_dir=False, overwrite_cache=True, seed=42, fp16=False, fp16_opt_level='O1', local_rank=-1, server_ip='', server_port='', n_gpu=1, device=device(type='cuda'), num_labels=2, output_mode='classification')
+04/09/2026 22:27:40 - INFO - __main__ -   Evaluate the following checkpoints: ['data/speeches/Congress/relevance/splits/basic/compare/roosebert']
+04/09/2026 22:27:41 - INFO - __main__ -   Creating features from dataset file at data/speeches/Congress/relevance/splits/basic
+04/09/2026 22:27:42 - INFO - hf.processors -   *** Example 0 ***
+04/09/2026 22:27:42 - INFO - hf.processors -   guid: test-0
+04/09/2026 22:27:42 - INFO - hf.processors -   example text_a: I will ask him. furthermore. whether he has not in his hand an exact copy of the invitation issued to the United States by the countries I have named. to show the precise character of what these invitations amount to. and whether or not the expenses of individuals who are asked is expected to be borne by the United States Government or by the government extending the invitation? -
+04/09/2026 22:27:42 - INFO - hf.processors -   example text_b: None
+04/09/2026 22:27:42 - INFO - hf.processors -   input_ids: 101 1045 2097 3198 2032 1012 7297 1012 3251 2002 2038 2025 1999 2010 2192 2019 6635 6100 1997 1996 8468 3843 2000 1996 2142 2163 2011 1996 3032 1045 2031 2315 1012 2000 2265 1996 10480 2839 1997 2054 2122 29492 3815 2000 1012 1998 3251 2030 2025 1996 11727 1997 3633 2040 2024 2356 2003 3517 2000 2022 15356 2011 1996 2142 2163 2231 2030 2011 1996 2231 8402 1996 8468 1029 1011 102 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/09/2026 22:27:42 - INFO - hf.processors -   attention_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/09/2026 22:27:42 - INFO - hf.processors -   label: no (id = 0)
+04/09/2026 22:27:42 - INFO - __main__ -   Saving features into cached file data/speeches/Congress/relevance/splits/basic/cached_test.jsonlist_roosebert_512_compare
+04/09/2026 22:27:42 - INFO - __main__ -   ***** Running evaluation  *****
+04/09/2026 22:27:42 - INFO - __main__ -     Num examples = 762
+04/09/2026 22:27:42 - INFO - __main__ -     Batch size = 8
+['no', 'yes']
+Constructing processor:
+Label list: ['no', 'yes']
+Label field: label
+Text fields: text None
+Weight field: weight
+Num labels: 2
+config data/speeches/Congress/relevance/splits/basic/compare/roosebert
+tokenizer data/speeches/Congress/relevance/splits/basic/compare/roosebert
+model data/speeches/Congress/relevance/splits/basic/compare/roosebert
+Do evaluation:
+checkpoint: data/speeches/Congress/relevance/splits/basic/compare/roosebert
+['accuracy', 'f1']
+cached_features_file: data/speeches/Congress/relevance/splits/basic/cached_test.jsonlist_roosebert_512_compare
+False
+num examples: 762
+example:
+InputExampleWeighted(guid='test-0', text_a='I will ask him. furthermore. whether he has not in his hand an exact copy of the invitation issued to the United States by the countries I have named. to show the precise character of what these invitations amount to. and whether or not the expenses of individuals who are asked is expected to be borne by the United States Government or by the government extending the invitation? -', text_b=None, label='no')
+Evaluating:   0%|          | 0/96 [00:00<?, ?it/s]Evaluating:   1%|          | 1/96 [00:00<00:18,  5.21it/s]Evaluating:   3%|▎         | 3/96 [00:00<00:10,  8.76it/s]Evaluating:   5%|▌         | 5/96 [00:00<00:08, 10.21it/s]Evaluating:   7%|▋         | 7/96 [00:00<00:08, 10.98it/s]Evaluating:   9%|▉         | 9/96 [00:00<00:07, 11.42it/s]Evaluating:  11%|█▏        | 11/96 [00:01<00:07, 11.69it/s]Evaluating:  14%|█▎        | 13/96 [00:01<00:06, 11.86it/s]Evaluating:  16%|█▌        | 15/96 [00:01<00:06, 11.99it/s]Evaluating:  18%|█▊        | 17/96 [00:01<00:06, 12.07it/s]Evaluating:  20%|█▉        | 19/96 [00:01<00:06, 12.11it/s]Evaluating:  22%|██▏       | 21/96 [00:01<00:06, 12.14it/s]Evaluating:  24%|██▍       | 23/96 [00:02<00:05, 12.17it/s]Evaluating:  26%|██▌       | 25/96 [00:02<00:05, 12.20it/s]Evaluating:  28%|██▊       | 27/96 [00:02<00:05, 12.21it/s]Evaluating:  30%|███       | 29/96 [00:02<00:05, 12.22it/s]Evaluating:  32%|███▏      | 31/96 [00:02<00:05, 12.24it/s]Evaluating:  34%|███▍      | 33/96 [00:02<00:05, 12.25it/s]Evaluating:  36%|███▋      | 35/96 [00:02<00:04, 12.24it/s]Evaluating:  39%|███▊      | 37/96 [00:03<00:04, 12.24it/s]Evaluating:  41%|████      | 39/96 [00:03<00:04, 12.25it/s]Evaluating:  43%|████▎     | 41/96 [00:03<00:04, 12.25it/s]Evaluating:  45%|████▍     | 43/96 [00:03<00:04, 12.26it/s]Evaluating:  47%|████▋     | 45/96 [00:03<00:04, 12.26it/s]Evaluating:  49%|████▉     | 47/96 [00:03<00:04, 12.24it/s]Evaluating:  51%|█████     | 49/96 [00:04<00:03, 12.25it/s]Evaluating:  53%|█████▎    | 51/96 [00:04<00:03, 12.24it/s]Evaluating:  55%|█████▌    | 53/96 [00:04<00:03, 12.24it/s]Evaluating:  57%|█████▋    | 55/96 [00:04<00:03, 12.24it/s]Evaluating:  59%|█████▉    | 57/96 [00:04<00:03, 12.23it/s]Evaluating:  61%|██████▏   | 59/96 [00:04<00:03, 12.24it/s]Evaluating:  64%|██████▎   | 61/96 [00:05<00:02, 12.25it/s]Evaluating:  66%|██████▌   | 63/96 [00:05<00:02, 12.25it/s]Evaluating:  68%|██████▊   | 65/96 [00:05<00:02, 12.25it/s]Evaluating:  70%|██████▉   | 67/96 [00:05<00:02, 12.24it/s]Evaluating:  72%|███████▏  | 69/96 [00:05<00:02, 12.24it/s]Evaluating:  74%|███████▍  | 71/96 [00:05<00:02, 12.24it/s]Evaluating:  76%|███████▌  | 73/96 [00:06<00:01, 12.24it/s]Evaluating:  78%|███████▊  | 75/96 [00:06<00:01, 12.24it/s]Evaluating:  80%|████████  | 77/96 [00:06<00:01, 12.23it/s]Evaluating:  82%|████████▏ | 79/96 [00:06<00:01, 12.23it/s]Evaluating:  84%|████████▍ | 81/96 [00:06<00:01, 12.23it/s]Evaluating:  86%|████████▋ | 83/96 [00:06<00:01, 12.24it/s]Evaluating:  89%|████████▊ | 85/96 [00:07<00:00, 12.23it/s]Evaluating:  91%|█████████ | 87/96 [00:07<00:00, 12.23it/s]Evaluating:  93%|█████████▎| 89/96 [00:07<00:00, 12.24it/s]Evaluating:  95%|█████████▍| 91/96 [00:07<00:00, 12.23it/s]Evaluating:  97%|█████████▋| 93/96 [00:07<00:00, 12.23it/s]Evaluating:  99%|█████████▉| 95/96 [00:07<00:00, 12.24it/s]Evaluating: 100%|██████████| 96/96 [00:07<00:00, 12.14it/s]
+04/09/2026 22:27:50 - INFO - __main__ -   ***** Eval results  *****
+04/09/2026 22:27:50 - INFO - __main__ -     acc = 0.8871391076115486
+04/09/2026 22:27:50 - INFO - __main__ -     f1 = 0.8808033212132548
+Instance weight shape: (762,)
+(762,)
+(762,)
+accuracy 2
+f1 2
+=== Done ===
+---------------------------------------
+Begin Slurm Epilog: Apr-09-2026 22:27:51
+Job ID:        4639002
+User ID:       agurram9
+Account:       coc
+Job name:      relevance_eval
+Resources:     cpu=1,gres/gpu:v100=1,mem=16G,node=1
+Rsrc Used:     cput=00:02:22,vmem=0,walltime=00:02:22,mem=2771896K,energy_used=0
+Partition:     coc-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-002-8-0
+---------------------------------------

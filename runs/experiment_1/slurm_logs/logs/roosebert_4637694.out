@@ -1,0 +1,34 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-09-2026 15:08:48
+Job ID:    4637694
+User ID:   agurram9
+Account:   coc
+Job name:  roosebert_imm
+Partition: coc-gpu
+QOS:       coc-ice
+---------------------------------------
+=== Caching model ===
+Fetching 6 files:   0%|          | 0/6 [00:00<?, ?it/s]Fetching 6 files: 100%|██████████| 6/6 [00:00<00:00, 78643.20it/s]
+=== Training relevance classifier ===
+Usage: run_final_model.py
+
+run_final_model.py: error: no such option: --save_steps
+srun: error: atl1-1-01-005-7-0: task 0: Exited with exit code 2
+=== Training tone classifier ===
+Usage: run_final_model_tone.py
+
+run_final_model_tone.py: error: no such option: --save_steps
+srun: error: atl1-1-01-005-7-0: task 0: Exited with exit code 2
+=== Done ===
+---------------------------------------
+Begin Slurm Epilog: Apr-09-2026 15:09:05
+Job ID:        4637694
+User ID:       agurram9
+Account:       coc
+Job name:      roosebert_imm
+Resources:     cpu=1,gres/gpu:rtx_6000=1,mem=16G,node=1
+Rsrc Used:     cput=00:00:18,vmem=0,walltime=00:00:18,mem=62076K,energy_used=0
+Partition:     coc-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-005-7-0
+---------------------------------------

@@ -1,0 +1,59 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-09-2026 13:47:37
+Job ID:    4637357
+User ID:   agurram9
+Account:   coc
+Job name:  roosebert_imm
+Partition: coc-gpu
+QOS:       coc-ice
+---------------------------------------
+ERROR: ld.so: object '/usr/lib64/libnccl.so.2' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
+ERROR: ld.so: object '/usr/lib64/libnccl.so.2' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
+ERROR: ld.so: object '/usr/lib64/libnccl.so.2' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
+=== Caching model ===
+ERROR: ld.so: object '/usr/lib64/libnccl.so.2' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
+Fetching 6 files:   0%|          | 0/6 [00:00<?, ?it/s]Fetching 6 files: 100%|██████████| 6/6 [00:00<00:00, 73156.47it/s]
+=== Training relevance classifier ===
+ERROR: ld.so: object '/usr/lib64/libnccl.so.2' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
+ERROR: ld.so: object '/usr/lib64/libnccl.so.2' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
+ERROR: ld.so: object '/usr/lib64/libnccl.so.2' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
+Traceback (most recent call last):
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 29, in <module>
+    import torch
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/torch/__init__.py", line 442, in <module>
+    from torch._C import *  # noqa: F403
+ImportError: /home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so: undefined symbol: ncclCommShrink
+/home/hice1/agurram9/.conda/envs/roosebert/bin/python3 -m hf.run --model_type bert --model_name_or_path ddore14/RooseBERT-cont-uncased --tokenizer_name  --name  --do_train --train all.jsonlist --data_dir data/speeches/Congress/relevance/splits/basic/ --max_seq_length 512 --per_gpu_eval_batch_size=8 --per_gpu_train_batch_size=8 --learning_rate 2e-05 --num_train_epochs 7 --output_dir data/speeches/Congress/relevance/splits/basic/bert/roosebert_RooseBERT-cont-uncased_s42_lr2e-05_msl512 --overwrite_cache --overwrite_output_dir --weight_field weight --metrics accuracy,f1 --seed 42 --do_lower_case
+=== Training tone classifier ===
+ERROR: ld.so: object '/usr/lib64/libnccl.so.2' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
+ERROR: ld.so: object '/usr/lib64/libnccl.so.2' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
+ERROR: ld.so: object '/usr/lib64/libnccl.so.2' from LD_PRELOAD cannot be preloaded (cannot open shared object file): ignored.
+Traceback (most recent call last):
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/home/hice1/agurram9/us-immigration-speeches-1.1/hf/run.py", line 29, in <module>
+    import torch
+  File "/home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/torch/__init__.py", line 442, in <module>
+    from torch._C import *  # noqa: F403
+ImportError: /home/hice1/agurram9/.conda/envs/roosebert/lib/python3.10/site-packages/torch/lib/libtorch_cuda.so: undefined symbol: ncclCommShrink
+roosebert_s42_lr2e-05_msl512
+/home/hice1/agurram9/.conda/envs/roosebert/bin/python3 -m hf.run --model_type bert --model_name_or_path ddore14/RooseBERT-cont-uncased --tokenizer_name  --name  --do_train --train all.jsonlist --data_dir data/speeches/Congress/tone/splits/label-weights/ --max_seq_length 512 --per_gpu_eval_batch_size=8 --per_gpu_train_batch_size=8 --learning_rate 2e-05 --num_train_epochs 7 --output_dir data/speeches/Congress/tone/splits/label-weights/bert/roosebert_s42_lr2e-05_msl512 --overwrite_cache --overwrite_output_dir --weight_field weight --metrics accuracy,per_class_f1 --seed 42 --do_lower_case
+=== Done ===
+---------------------------------------
+Begin Slurm Epilog: Apr-09-2026 13:48:28
+Job ID:        4637357
+User ID:       agurram9
+Account:       coc
+Job name:      roosebert_imm
+Resources:     cpu=1,gres/gpu:v100=1,mem=16G,node=1
+Rsrc Used:     cput=00:00:51,vmem=0,walltime=00:00:51,mem=62560K,energy_used=0
+Partition:     coc-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-002-6-0
+---------------------------------------
