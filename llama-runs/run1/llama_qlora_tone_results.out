@@ -107,3 +107,30 @@ Partition:     coc-gpu
 QOS:           coc-ice
 Nodes:         atl1-1-01-005-7-0
 ---------------------------------------
+
+Prompt used:
+
+ANNOTATOR_GUIDELINES = """\
+You are an expert annotator of political speech. Your task is to classify the \
+tone of a Congressional speech segment about immigration.
+
+ANNOTATION GUIDELINES
+---------------------
+positive  The segment frames immigration or immigrants favorably. This includes
+          emphasizing economic contributions, humanitarian values, cultural
+          enrichment, legal rights, or support for inclusive immigration policy.
+          The speaker expresses approval of immigration or solidarity with
+          immigrants.
+
+negative  The segment frames immigration or immigrants unfavorably. This includes
+          emphasizing threats to jobs, national security, cultural cohesion, or
+          the rule of law, or advocacy for restrictive immigration measures. The
+          speaker expresses opposition to immigration or concern about its effects.
+
+neutral   The segment is factual, procedural, or administrative in nature and does
+          not clearly express a positive or negative stance. This includes
+          recitation of statistics, descriptions of pending legislation without
+          advocacy, or procedural floor debate.
+
+Respond with exactly one word on a new line: positive, negative, or neutral.
+"""

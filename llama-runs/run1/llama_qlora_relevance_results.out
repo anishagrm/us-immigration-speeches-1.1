@@ -1,0 +1,124 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-14-2026 08:53:23
+Job ID:    4838317
+User ID:   jvarma3
+Account:   coc
+Job name:  llama_qlora_relevance
+Partition: coc-gpu
+QOS:       coc-ice
+---------------------------------------
+Working directory: /home/hice1/jvarma3/personal/us-immigration-speeches-1.1
+
+CondaError: Run 'conda init' before 'conda deactivate'
+
+=== Caching Llama-3.2-1B ===
+
+Fetching 13 files:   0%|          | 0/13 [00:00<?, ?it/s]
+Fetching 13 files: 100%|██████████| 13/13 [00:00<00:00, 46247.63it/s]
+Model cached.
+=== Training relevance classifier (QLoRA) ===
+INFO  Device: cuda
+INFO  Output dir: data/speeches/Congress/relevance/splits/basic/llama/llama_qlora_Llama-3.2-1B_s42_lr0.0002
+INFO  HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]
+Loading weights:   1%|          | 1/146 [00:06<14:39,  6.06s/it]
+
+Loading weights: 100%|██████████| 146/146 [00:15<00:00,  9.14it/s]
+INFO  HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/generation_config.json "HTTP/1.1 200 OK"
+INFO  Loaded 7626 training examples from data/speeches/Congress/relevance/splits/basic/all.jsonlist
+warmup_ratio is deprecated and will be removed in v5.2. Use `warmup_steps` instead.
+INFO  === Starting training ===
+trainable params: 1,703,936 || all params: 1,237,518,336 || trainable%: 0.1377
+
+  0%|          | 0/1431 [00:00<?, ?it/s]/home/hice1/jvarma3/.conda/envs/llama/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py:745: UserWarning: torch.utils.checkpoint: the use_reentrant parameter should be passed explicitly. In version 2.5 we will raise an exception if use_reentrant is not passed. use_reentrant=False is recommended, but if you need to preserve the current default behavior, you can pass use_reentrant=True. Refer to docs for more details on the differences between the two variants.
+  return fn(*args, **kwargs)
+
+  0%|          | 1/1431 [00:11<4:36:32, 11.60s/it]
+  1%|          | 8/1431 [00:20<35:23,  1.49s/it]
+100%|██████████| 1431/1431 [29:14<00:00,  1.12s/it]INFO  HTTP Request: HEAD https://huggingface.co/meta-llama/Llama-3.2-1B/resolve/main/config.json "HTTP/1.1 200 OK"
+NFO  Saved to data/speeches/Congress/relevance/splits/basic/llama/llama_qlora_Llama-3.2-1B_s42_lr0.0002
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001361', 'epoch': '0.1049'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001998', 'epoch': '0.2098'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001984', 'epoch': '0.3146'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001957', 'epoch': '0.4195'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001917', 'epoch': '0.5244'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001865', 'epoch': '0.6293'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001802', 'epoch': '0.7341'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001728', 'epoch': '0.839'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001644', 'epoch': '0.9439'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001551', 'epoch': '1.048'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001451', 'epoch': '1.153'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001345', 'epoch': '1.258'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001235', 'epoch': '1.363'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001121', 'epoch': '1.468'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '0.0001006', 'epoch': '1.573'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '8.904e-05', 'epoch': '1.678'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '7.765e-05', 'epoch': '1.782'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '6.656e-05', 'epoch': '1.887'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '5.591e-05', 'epoch': '1.992'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '4.586e-05', 'epoch': '2.096'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '3.652e-05', 'epoch': '2.201'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '2.803e-05', 'epoch': '2.306'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '2.051e-05', 'epoch': '2.411'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '1.404e-05', 'epoch': '2.516'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '8.721e-06', 'epoch': '2.621'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '4.62e-06', 'epoch': '2.726'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '1.791e-06', 'epoch': '2.831'}
+{'loss': '0', 'grad_norm': '0', 'learning_rate': '2.735e-07', 'epoch': '2.936'}
+{'train_runtime': '1756', 'train_samples_per_second': '13.03', 'train_steps_per_second': '0.815', 'train_loss': '0', 'epoch': '3'}
+
+Scoring:   0%|          | 0/96 [00:00<?, ?it/s]
+Scoring:   1%|          | 1/96 [00:00<00:58,  1.62it/s]
+Scoring:   2%|▏         | 2/96 [00:00<00:33,  2.81it/s]
+Scoring: 100%|██████████| 96/96 [00:17<00:00,  5.44it/s]
+INFO  Saved 762 predictions → data/speeches/Congress/relevance/splits/basic/llama/llama_qlora_Llama-3.2-1B_s42_lr0.0002/preds_dev.tsv
+INFO  
+=== dev ===
+acc = 0.5315
+f1-yes = 0.3770
+macro_f1 = 0.5008
+
+Scoring:   0%|          | 0/96 [00:00<?, ?it/s]
+Scoring: 100%|██████████| 96/96 [00:16<00:00,  5.66it/s]
+INFO  Saved 762 predictions → data/speeches/Congress/relevance/splits/basic/llama/llama_qlora_Llama-3.2-1B_s42_lr0.0002/preds_test.tsv
+INFO  
+=== test ===
+acc = 0.5197
+f1-yes = 0.3534
+macro_f1 = 0.4857
+=== Done ===
+---------------------------------------
+Begin Slurm Epilog: Apr-14-2026 09:26:14
+Job ID:        4838317
+User ID:       jvarma3
+Account:       coc
+Job name:      llama_qlora_relevance
+Resources:     cpu=1,gres/gpu:v100=1,mem=16G,node=1
+Rsrc Used:     cput=00:32:52,vmem=0,walltime=00:32:52,mem=79096K,energy_used=0
+Partition:     coc-gpu
+QOS:           coc-ice
+Nodes:         atl1-1-01-002-6-0
+---------------------------------------
+
+
+Prompt used:
+
+ANNOTATOR_GUIDELINES = """\
+You are an expert annotator of political speech. Your task is to classify \
+whether a Congressional speech segment is relevant to the topic of immigration.
+
+ANNOTATION GUIDELINES
+---------------------
+yes   The segment is about immigration, immigrants, or closely related topics
+      such as border policy, citizenship, visas, asylum, deportation, or the
+      rights and treatment of foreign-born people. The segment discusses people
+      moving between countries for any reason (work, refuge, family, etc.).
+
+no    The segment is not about immigration. It may mention foreign countries,
+      international trade, foreign policy, or ethnic groups without discussing
+      immigration specifically. Procedural remarks, unrelated legislation, or
+      general political debate that does not concern immigration should be
+      marked no.
+
+Respond with exactly one word: yes or no.
+"""
