@@ -19,7 +19,17 @@ import csv
 import json
 import logging
 
-from transformers.file_utils import is_tf_available, is_torch_available
+try:
+    from transformers.utils import is_tf_available, is_torch_available
+except ImportError:
+    try:
+        from transformers.file_utils import is_tf_available, is_torch_available
+    except ImportError:
+        def is_tf_available():
+            return False
+        def is_torch_available():
+            import importlib
+            return importlib.util.find_spec("torch") is not None
 
 
 logger = logging.getLogger(__name__)
