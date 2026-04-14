@@ -165,7 +165,7 @@ class GenericSingleProcessorWeighted(object):
             if self._weight_field is None:
                 weight = 1.0
             else:
-                weight = float(line[self._weight_field])
+                weight = float(line.get(self._weight_field, 1.0))
             examples.append(InputExampleWeighted(guid=guid, text_a=text_a, text_b=text_b, label=label, weight=weight))
         return examples
 

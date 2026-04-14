@@ -32,9 +32,10 @@ from torch.utils.data import DataLoader, RandomSampler, SequentialSampler, Tenso
 from torch.utils.data.distributed import DistributedSampler
 from tqdm import tqdm, trange
 
+from torch.optim import AdamW
+
 from transformers import (
     WEIGHTS_NAME,
-    AdamW,
     AlbertConfig,
     AlbertForSequenceClassification,
     AlbertTokenizer,
@@ -273,24 +274,19 @@ def train(args, train_dataset, model, tokenizer, classes):
                 epoch_iterator.close()
                 break
 
-        if args.local_rank in [-1, 0]:
-            # Save model checkpoint after each epoch
-            output_dir = os.path.join(args.output_dir, "checkpoint-{}".format(global_step))
-            if not os.path.exists(output_dir):
-                os.makedirs(output_dir)
-            model_to_save = (
-                model.module if hasattr(model, "module") else model
-            )  # Take care of distributed/parallel training
-            print('output dir:',output_dir)
-            model_to_save.save_pretrained(output_dir)
-            tokenizer.save_pretrained(output_dir)
-
-            torch.save(args, os.path.join(output_dir, "training_args.bin"))
-            logger.info("Saving model checkpoint to %s", output_dir)
-
-            torch.save(optimizer.state_dict(), os.path.join(output_dir, "optimizer.pt"))
-            torch.save(scheduler.state_dict(), os.path.join(output_dir, "scheduler.pt"))
-            logger.info("Saving optimizer and scheduler states to %s", output_dir)
+        # Per-epoch checkpointing disabled to save disk space (final model saved after training)
+        # if args.local_rank in [-1, 0]:
+        #     output_dir = os.path.join(args.output_dir, "checkpoint-{}".format(global_step))
+        #     if not os.path.exists(output_dir):
+        #         os.makedirs(output_dir)
+        #     model_to_save = (
+        #         model.module if hasattr(model, "module") else model
+        #     )
+        #     model_to_save.save_pretrained(output_dir)
+        #     tokenizer.save_pretrained(output_dir)
+        #     torch.save(args, os.path.join(output_dir, "training_args.bin"))
+        #     torch.save(optimizer.state_dict(), os.path.join(output_dir, "optimizer.pt"))
+        #     torch.save(scheduler.state_dict(), os.path.join(output_dir, "scheduler.pt"))
 
 
         if args.max_steps > 0 and global_step > args.max_steps:

@@ -3,7 +3,6 @@
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1                                                                                     
 #SBATCH --gres=gpu:1
-#SBATCH --constraint=gpu-v100
 #SBATCH --mem-per-gpu=16G                                                                                       
 #SBATCH -t 6:00:00                                    
 #SBATCH -o logs/roosebert_%j.out                                                                                
@@ -16,7 +15,6 @@ mkdir -p logs
 module load anaconda3
 source $(conda info --base)/etc/profile.d/conda.sh
 conda activate roosebert
-module load cuda/12.9.1
 
 echo "=== Caching model ==="
 python3 -c "
@@ -35,7 +33,7 @@ srun python3 -m classification.run_final_model \
     --lr 2e-5 \
     --max_seq_length 512 \
     --per_gpu 8 \
-    --seed 42 \
+    --seed 42
 
 echo "=== Training tone classifier ==="
 srun python3 -m classification.run_final_model_tone \
@@ -48,5 +46,5 @@ srun python3 -m classification.run_final_model_tone \
     --lr 2e-5 \
     --max_seq_length 512 \
     --per_gpu 8 \
-    --seed 42 \
+    --seed 42
 echo "=== Done ==="

@@ -111,7 +111,6 @@ def run_folds(basedir, seed=42, model_type='bert', model_name_or_path='bert-base
                '--overwrite_cache',
                '--overwrite_output_dir',
                '--eval_all_checkpoints',
-               '--weight_field', 'weight',
                '--metrics', 'accuracy,per_class_f1',
                '--seed', str(seed)
                ]
@@ -139,7 +138,6 @@ def run_folds(basedir, seed=42, model_type='bert', model_name_or_path='bert-base
                '--model_name_or_path',  outdir,
                '--eval_partition', 'test',
                '--eval_all_checkpoints',
-               '--weight_field', 'weight',
                '--metrics', 'accuracy,per_class_f1'
                ]
         if model_type == 'bert':

@@ -95,7 +95,6 @@ def run(basedir, seed=42, model_type='bert', model_name_or_path='bert-base-uncas
            '--output_dir', outdir,
            '--overwrite_cache',
            '--overwrite_output_dir',
-           '--weight_field', 'weight',
            '--metrics', 'accuracy,per_class_f1',
            '--seed', str(seed)
            ]

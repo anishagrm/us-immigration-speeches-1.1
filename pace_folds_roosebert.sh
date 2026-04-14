@@ -1,12 +1,12 @@
 #!/bin/bash
-#SBATCH -J roosebert_imm                              
+#SBATCH -J roosebert_folds
 #SBATCH -N 1
-#SBATCH --ntasks-per-node=1                                                                                     
+#SBATCH --ntasks-per-node=1
 #SBATCH --gres=gpu:1
 #SBATCH --constraint=gpu-v100
-#SBATCH --mem-per-gpu=16G                                                                                       
-#SBATCH -t 6:00:00                                    
-#SBATCH -o logs/roosebert_%j.out                                                                                
+#SBATCH --mem-per-gpu=16G
+#SBATCH -t 16:00:00
+#SBATCH -o logs/roosebert_folds_%j.out
 #SBATCH --mail-type=BEGIN,END,FAIL
 #SBATCH --mail-user=agurram9@gatech.edu
 
@@ -18,35 +18,36 @@ source $(conda info --base)/etc/profile.d/conda.sh
 conda activate roosebert
 module load cuda/12.9.1
 
-echo "=== Caching model ==="
+echo "=== Caching RooseBERT ==="
 python3 -c "
 from huggingface_hub import snapshot_download
 snapshot_download('ddore14/RooseBERT-cont-uncased', ignore_patterns=['trainer_state.json'])
 "
 
-echo "=== Training relevance classifier ==="
-srun python3 -m classification.run_final_model \
+echo "=== Relevance folds: RooseBERT ==="
+python3 -m classification.run_folds_hf \
     --model_type bert \
     --model_name_or_path ddore14/RooseBERT-cont-uncased \
     --basedir data/speeches/Congress/relevance/splits/basic/ \
-    --train-file all.jsonlist \
+    --train-file train.jsonlist \
     --output-prefix roosebert \
     --n_epochs 7 \
     --lr 2e-5 \
     --max_seq_length 512 \
     --per_gpu 8 \
-    --seed 42 \
+    --seed 42
 
-echo "=== Training tone classifier ==="
-srun python3 -m classification.run_final_model_tone \
+echo "=== Tone folds: RooseBERT ==="
+python3 -m classification.run_folds_hf_tone \
     --model_type bert \
     --model_name_or_path ddore14/RooseBERT-cont-uncased \
     --basedir data/speeches/Congress/tone/splits/label-weights/ \
-    --train-file all.jsonlist \
+    --train-file train.jsonlist \
     --output-prefix roosebert \
     --n_epochs 7 \
     --lr 2e-5 \
     --max_seq_length 512 \
     --per_gpu 8 \
-    --seed 42 \
+    --seed 42
+
 echo "=== Done ==="
