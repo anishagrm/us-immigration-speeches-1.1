@@ -19,7 +19,14 @@ import os
 import json
 import logging
 
-from transformers.utils import is_tf_available
+try:
+    from transformers.utils import is_tf_available
+except ImportError:
+    try:
+        from transformers.file_utils import is_tf_available
+    except ImportError:
+        def is_tf_available():
+            return False
 from transformers.data.processors.utils import InputExample, InputFeatures
 from hf.utils import InputFeaturesWeighted
 import numpy as np
