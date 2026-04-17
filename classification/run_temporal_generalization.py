@@ -37,14 +37,18 @@ ERAS = ["early", "mid", "modern"]
 # Base dir (used for checkpoint output path)
 SPLIT_DIR_TMPL = "data/annotations/relevance_and_tone/{era}/relevance/splits/{split}/"
 
-# nontest/ subdir contains nontest.jsonlist (all non-test data)
-TRAIN_DIR_TMPL = "data/annotations/relevance_and_tone/{era}/relevance/splits/{split}/nontest/"
-
 # Canonical test split lives in fold 0
 TEST_DIR_TMPL = "data/annotations/relevance_and_tone/{era}/relevance/splits/{split}/folds/0/"
 
-TRAIN_FILE = "nontest.jsonlist"  # all non-test data; for training & label-list derivation
-TEST_FILE = "test.jsonlist"      # canonical held-out test set (same across all folds)
+TEST_FILE = "test.jsonlist"  # canonical held-out test set (same across all folds)
+
+# Training file search order — handles two data structures:
+#   PACE (prepare_splits_from_labels.py): basic/all.jsonlist
+#   Local (original pipeline):            basic/nontest/nontest.jsonlist
+_TRAIN_CANDIDATES = [
+    ("",        "all.jsonlist"),
+    ("nontest", "nontest.jsonlist"),
+]
 
 
 def era_split_dir(era: str, split: str) -> str:
@@ -52,9 +56,18 @@ def era_split_dir(era: str, split: str) -> str:
     return SPLIT_DIR_TMPL.format(era=era, split=split)
 
 
-def era_train_dir(era: str, split: str) -> str:
-    """Dir that contains nontest.jsonlist."""
-    return TRAIN_DIR_TMPL.format(era=era, split=split)
+def find_train(era: str, split: str):
+    """Return (data_dir, filename) for the training file, trying multiple locations."""
+    basedir = era_split_dir(era, split)
+    for subdir, fname in _TRAIN_CANDIDATES:
+        d = os.path.join(basedir, subdir) if subdir else basedir
+        if os.path.isfile(os.path.join(d, fname)):
+            return d, fname
+    tried = [os.path.join(basedir, s, f) if s else os.path.join(basedir, f)
+             for s, f in _TRAIN_CANDIDATES]
+    raise FileNotFoundError(
+        f"No training file found for era={era} split={split}. Tried: {tried}"
+    )
 
 
 def era_test_dir(era: str, split: str) -> str:
@@ -86,7 +99,7 @@ def run_training(train_era: str, opts) -> str:
         logger.info(f"[train/{train_era}] Checkpoint already exists at {outdir} — skipping training.")
         return outdir
 
-    train_dir = era_train_dir(train_era, opts.split)
+    train_dir, train_file = find_train(train_era, opts.split)
     name = os.path.basename(basedir.rstrip("/"))
     cmd = [
         sys.executable, "-m", "hf.run",
@@ -94,7 +107,7 @@ def run_training(train_era: str, opts) -> str:
         "--model_name_or_path", opts.model_name_or_path,
         "--name", name,
         "--do_train",
-        "--train", TRAIN_FILE,
+        "--train", train_file,
         "--data_dir", train_dir,
         "--max_seq_length", str(opts.max_seq_length),
         f"--per_gpu_train_batch_size={opts.per_gpu}",
@@ -127,7 +140,7 @@ def run_cross_eval(train_era: str, test_era: str,
     Evaluate a trained model (from train_era) on test_era's test split.
     Returns the parsed eval metrics dict, or {} on failure.
     """
-    train_data_dir = era_train_dir(train_era, opts.split)
+    train_data_dir, train_file = find_train(train_era, opts.split)
     test_dir = era_test_dir(test_era, opts.split)
     outdir = os.path.join(results_root, f"train_{train_era}_test_{test_era}")
     os.makedirs(outdir, exist_ok=True)
@@ -140,9 +153,8 @@ def run_cross_eval(train_era: str, test_era: str,
         "--name", name,
         "--do_eval",
         "--eval_partition", "test",
-        # data_dir points to nontest/ so hf.run can derive the label list
         "--data_dir", train_data_dir,
-        "--train", TRAIN_FILE,
+        "--train", train_file,
         # test examples come from the (possibly different) test era's fold-0 dir
         "--test_data_dir", test_dir,
         "--test", TEST_FILE,
