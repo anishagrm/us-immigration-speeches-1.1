@@ -15,7 +15,14 @@ echo "Working directory: $(pwd)"
 mkdir -p logs
 
 module load anaconda3
+source $(conda info --base)/etc/profile.d/conda.sh
 conda activate hum
+
+export HF_HOME=$HOME/scratch/hf_cache
+mkdir -p $HF_HOME
+
+echo "=== Pre-caching roberta-base ==="
+python -c "from transformers import AutoModel, AutoTokenizer; AutoTokenizer.from_pretrained('roberta-base'); AutoModel.from_pretrained('roberta-base'); print('Cached.')"
 
 echo "=== Experiment 3: Temporal Generalization ==="
 srun python -m classification.run_temporal_generalization \
@@ -27,6 +34,7 @@ srun python -m classification.run_temporal_generalization \
     --per_gpu 4 \
     --max_seq_length 512 \
     --seed 42 \
-    --results-dir results/temporal_generalization
+    --results-dir results/temporal_generalization \
+    --overwrite
 
 echo "=== Done ==="
