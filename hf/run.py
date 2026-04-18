@@ -108,7 +108,7 @@ def train(args, train_dataset, model, tokenizer, classes):
 
     """ Train the model """
     if args.local_rank in [-1, 0]:
-        tb_writer = SummaryWriter()
+        tb_writer = SummaryWriter() if SummaryWriter is not None else None
 
     args.train_batch_size = args.per_gpu_train_batch_size * max(1, args.n_gpu)
     train_sampler = RandomSampler(train_dataset) if args.local_rank == -1 else DistributedSampler(train_dataset)
@@ -301,7 +301,7 @@ def train(args, train_dataset, model, tokenizer, classes):
             train_iterator.close()
             break
 
-    if args.local_rank in [-1, 0]:
+    if args.local_rank in [-1, 0] and tb_writer is not None:
         tb_writer.close()
 
     log_file.close()
