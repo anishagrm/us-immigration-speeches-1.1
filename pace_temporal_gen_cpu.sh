@@ -15,7 +15,7 @@ mkdir -p logs
 
 module load anaconda3
 source $(conda info --base)/etc/profile.d/conda.sh
-conda activate hum
+conda activate llama
 
 export HF_HOME=$HOME/scratch/hf_cache
 mkdir -p $HF_HOME
