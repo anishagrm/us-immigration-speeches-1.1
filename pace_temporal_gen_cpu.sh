@@ -34,6 +34,6 @@ srun python -m classification.run_temporal_generalization \
     --max_seq_length 512 \
     --seed 42 \
     --results-dir results/temporal_generalization \
-    --overwrite
+    --eval-only
 
 echo "=== Done ==="
