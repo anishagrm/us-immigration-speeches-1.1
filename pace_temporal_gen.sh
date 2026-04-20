@@ -5,7 +5,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --constraint=nvidia-gpu
 #SBATCH --mem-per-gpu=16G
-#SBATCH -t 24:00:00
+#SBATCH -t 04:00:00
 #SBATCH -o logs/temporal_gen_%j.out
 #SBATCH --mail-type=FAIL
 #SBATCH --mail-user=jvarma3@gatech.edu
@@ -16,7 +16,7 @@ mkdir -p logs
 
 module load anaconda3
 source $(conda info --base)/etc/profile.d/conda.sh
-conda activate hum
+conda activate llama
 
 export HF_HOME=$HOME/scratch/hf_cache
 mkdir -p $HF_HOME
@@ -29,7 +29,7 @@ srun python -m classification.run_temporal_generalization \
     --model_type roberta \
     --model_name_or_path roberta-base \
     --split basic \
-    --n_epochs 7 \
+    --n_epochs 3 \
     --lr 2e-5 \
     --per_gpu 4 \
     --max_seq_length 512 \
