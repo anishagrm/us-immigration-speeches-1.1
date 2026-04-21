@@ -215,7 +215,7 @@ results/temporal_generalization/{model}_s{seed}/summary.tsv
   `data/annotations/relevance_and_tone/{era}/relevance/splits/basic/bert/temporal_{era}_{model}_s{seed}_lr{lr}_msl{msl}/`
 - The script skips re-training if a valid checkpoint exists; use `--overwrite` to force re-training
 
-### Results (RoBERTa-base, seed 42, 7 epochs)
+### Results (RoBERTa-base, seed 42, 3 epochs)
 
 Macro-F1 scores for all 9 train-era × test-era combinations on the relevance task (is this speech about immigration?).
 
