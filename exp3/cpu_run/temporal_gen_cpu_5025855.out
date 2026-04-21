@@ -1,0 +1,495 @@
+---------------------------------------
+Begin Slurm Prolog: Apr-20-2026 20:22:42
+Job ID:    5025855
+User ID:   jvarma3
+Account:   coc
+Job name:  temporal_gen_cpu
+Partition: coc-cpu
+QOS:       coc-ice
+---------------------------------------
+Working directory: /home/hice1/jvarma3/personal/us-immigration-speeches-1.1
+=== Pre-caching roberta-base ===
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights:   1%|          | 1/197 [00:00<00:27,  7.09it/s]Loading weights:   4%|▎         | 7/197 [00:00<00:06, 31.05it/s]Loading weights:  14%|█▎        | 27/197 [00:00<00:01, 93.57it/s]Loading weights:  24%|██▍       | 47/197 [00:00<00:01, 130.91it/s]Loading weights:  32%|███▏      | 64/197 [00:00<00:00, 141.74it/s]Loading weights:  40%|████      | 79/197 [00:00<00:00, 133.91it/s]Loading weights:  49%|████▊     | 96/197 [00:00<00:00, 136.55it/s]Loading weights:  66%|██████▌   | 130/197 [00:00<00:00, 189.67it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 201.14it/s]
+[1mRobertaModel LOAD REPORT[0m from: roberta-base
+Key                             | Status     | 
+--------------------------------+------------+-
+lm_head.bias                    | UNEXPECTED | 
+lm_head.layer_norm.bias         | UNEXPECTED | 
+lm_head.dense.weight            | UNEXPECTED | 
+roberta.embeddings.position_ids | UNEXPECTED | 
+lm_head.layer_norm.weight       | UNEXPECTED | 
+lm_head.dense.bias              | UNEXPECTED | 
+pooler.dense.bias               | MISSING    | 
+pooler.dense.weight             | MISSING    | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+- MISSING:	those params were newly initialized because missing from the checkpoint. Consider training on your downstream task.
+Cached.
+=== Experiment 3: Temporal Generalization (CPU) ===
+INFO  [eval-only/early] Using checkpoint: data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512
+INFO  [eval-only/mid] Using checkpoint: data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512
+INFO  [eval-only/modern] Using checkpoint: data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512
+INFO  
+============================================================
+INFO  Evaluating: train=early  test=early
+INFO  ============================================================
+INFO  [eval/early→early] /home/hice1/jvarma3/.conda/envs/llama/bin/python -m hf.run --model_type roberta --model_name_or_path data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512 --name basic --do_eval --eval_partition test --data_dir data/annotations/relevance_and_tone/early/relevance/splits/basic/ --train all.jsonlist --test_data_dir data/annotations/relevance_and_tone/early/relevance/splits/basic/folds/0/ --test test.jsonlist --max_seq_length 512 --per_gpu_eval_batch_size=8 --output_dir results/temporal_generalization/roberta-base_s42/train_early_test_early --overwrite_cache --overwrite_output_dir --metrics accuracy,f1 --seed 42
+04/20/2026 20:25:08 - WARNING - __main__ -   Process rank: -1, device: cpu, n_gpu: 0, distributed training: False, 16-bits training: False
+['no', 'yes']
+Constructing processor:
+Label list: ['no', 'yes']
+Label field: label
+Text fields: text None
+Weight field: None
+Num labels: 2
+config data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512
+tokenizer data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512
+model data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights:   8%|▊         | 16/201 [00:00<00:01, 155.97it/s]Loading weights:  16%|█▌        | 32/201 [00:00<00:01, 113.87it/s]Loading weights:  24%|██▍       | 48/201 [00:00<00:01, 121.88it/s]Loading weights:  35%|███▌      | 71/201 [00:00<00:00, 149.33it/s]Loading weights:  50%|████▉     | 100/201 [00:00<00:00, 185.81it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 321.77it/s]
+04/20/2026 20:25:10 - INFO - __main__ -   Training/evaluation parameters Namespace(model_type='roberta', model_name_or_path='data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512', name='basic', data_dir='data/annotations/relevance_and_tone/early/relevance/splits/basic/', train='all.jsonlist', dev='dev.jsonlist', test='test.jsonlist', test_data_dir='data/annotations/relevance_and_tone/early/relevance/splits/basic/folds/0/', output_dir='results/temporal_generalization/roberta-base_s42/train_early_test_early', text_field='text', text_field_b=None, label_field='label', weight_field=None, metrics='accuracy,f1', config_name='', tokenizer_name='', cache_dir='', max_seq_length=512, do_train=False, do_eval=True, eval_partition='test', predict=None, default_label=None, pred_file_name='preds', evaluate_during_training=False, do_lower_case=False, per_gpu_train_batch_size=8, per_gpu_eval_batch_size=8, gradient_accumulation_steps=1, learning_rate=5e-05, weight_decay=0.0, adam_epsilon=1e-08, max_grad_norm=1.0, num_train_epochs=3.0, max_steps=-1, warmup_steps=0, logging_steps=500, save_steps=500, eval_all_checkpoints=False, no_cuda=False, overwrite_output_dir=True, overwrite_cache=True, seed=42, fp16=False, fp16_opt_level='O1', local_rank=-1, server_ip='', server_port='', n_gpu=0, device=device(type='cpu'), num_labels=2, output_mode='classification')
+04/20/2026 20:25:10 - INFO - __main__ -   Evaluate the following checkpoints: ['data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512']
+Do evaluation:
+checkpoint: data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 4855.30it/s]
+04/20/2026 20:25:10 - INFO - __main__ -   Creating features from dataset file at data/annotations/relevance_and_tone/early/relevance/splits/basic/
+04/20/2026 20:25:11 - INFO - hf.processors -   *** Example 0 ***
+04/20/2026 20:25:11 - INFO - hf.processors -   guid: test-0
+04/20/2026 20:25:11 - INFO - hf.processors -   example text_a: Secondly. "qualifications:" what are they? Tley are resilence. age. and nine years citizenship. and they are nothing more. This is so stated by the Senator from Iudiana. the Senator frito Ohio. [Mr. Triun.qx.] the Senator front Missouri.
+04/20/2026 20:25:11 - INFO - hf.processors -   example text_b: None
+04/20/2026 20:25:11 - INFO - hf.processors -   input_ids: 0 45527 4 22 27702 14868 36856 99 32 51 116 255 607 32 49342 4086 4 1046 4 8 1117 107 8860 4 8 51 32 1085 55 4 152 16 98 2305 30 5 4336 31 38 1906 8878 4 5 4336 856 24913 2042 4 646 10980 4 6892 879 4 1343 1178 21838 5 4336 760 4630 4 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+04/20/2026 20:25:11 - INFO - hf.processors -   attention_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/20/2026 20:25:11 - INFO - hf.processors -   label: no (id = 0)
+04/20/2026 20:25:11 - INFO - __main__ -   Saving features into cached file data/annotations/relevance_and_tone/early/relevance/splits/basic/cached_test.jsonlist_temporal_early_roberta-base_s42_lr2e-05_msl512_512_basic
+04/20/2026 20:25:11 - INFO - __main__ -   ***** Running evaluation  *****
+04/20/2026 20:25:11 - INFO - __main__ -     Num examples = 378
+04/20/2026 20:25:11 - INFO - __main__ -     Batch size = 8
+['accuracy', 'f1']
+cached_features_file: data/annotations/relevance_and_tone/early/relevance/splits/basic/cached_test.jsonlist_temporal_early_roberta-base_s42_lr2e-05_msl512_512_basic
+True
+num examples: 378
+example:
+InputExampleWeighted(guid='test-0', text_a='Secondly. "qualifications:" what are they? Tley are resilence. age. and nine years citizenship. and they are nothing more. This is so stated by the Senator from Iudiana. the Senator frito Ohio. [Mr. Triun.qx.] the Senator front Missouri.', text_b=None, label='no')
+Evaluating:   0%|          | 0/48 [00:00<?, ?it/s]Evaluating:   2%|▏         | 1/48 [00:09<07:04,  9.03s/it]Evaluating:   4%|▍         | 2/48 [00:10<03:20,  4.35s/it]Evaluating:   6%|▋         | 3/48 [00:11<02:07,  2.84s/it]Evaluating:   8%|▊         | 4/48 [00:12<01:32,  2.11s/it]Evaluating:  10%|█         | 5/48 [00:13<01:13,  1.70s/it]Evaluating:  12%|█▎        | 6/48 [00:14<01:01,  1.46s/it]Evaluating:  15%|█▍        | 7/48 [00:15<00:53,  1.30s/it]Evaluating:  17%|█▋        | 8/48 [00:16<00:48,  1.21s/it]Evaluating:  19%|█▉        | 9/48 [00:17<00:44,  1.14s/it]Evaluating:  21%|██        | 10/48 [00:18<00:41,  1.08s/it]Evaluating:  23%|██▎       | 11/48 [00:18<00:38,  1.04s/it]Evaluating:  25%|██▌       | 12/48 [00:19<00:36,  1.02s/it]Evaluating:  27%|██▋       | 13/48 [00:20<00:34,  1.01it/s]Evaluating:  29%|██▉       | 14/48 [00:21<00:33,  1.02it/s]Evaluating:  31%|███▏      | 15/48 [00:22<00:32,  1.03it/s]Evaluating:  33%|███▎      | 16/48 [00:23<00:31,  1.03it/s]Evaluating:  35%|███▌      | 17/48 [00:24<00:29,  1.04it/s]Evaluating:  38%|███▊      | 18/48 [00:25<00:28,  1.04it/s]Evaluating:  40%|███▉      | 19/48 [00:26<00:27,  1.04it/s]Evaluating:  42%|████▏     | 20/48 [00:27<00:26,  1.05it/s]Evaluating:  44%|████▍     | 21/48 [00:28<00:25,  1.05it/s]Evaluating:  46%|████▌     | 22/48 [00:29<00:24,  1.05it/s]Evaluating:  48%|████▊     | 23/48 [00:30<00:23,  1.06it/s]Evaluating:  50%|█████     | 24/48 [00:31<00:22,  1.06it/s]Evaluating:  52%|█████▏    | 25/48 [00:32<00:21,  1.07it/s]Evaluating:  54%|█████▍    | 26/48 [00:33<00:20,  1.07it/s]Evaluating:  56%|█████▋    | 27/48 [00:34<00:19,  1.06it/s]Evaluating:  58%|█████▊    | 28/48 [00:35<00:18,  1.05it/s]Evaluating:  60%|██████    | 29/48 [00:36<00:18,  1.04it/s]Evaluating:  62%|██████▎   | 30/48 [00:37<00:17,  1.04it/s]Evaluating:  65%|██████▍   | 31/48 [00:38<00:16,  1.05it/s]Evaluating:  67%|██████▋   | 32/48 [00:38<00:15,  1.05it/s]Evaluating:  69%|██████▉   | 33/48 [00:39<00:14,  1.06it/s]Evaluating:  71%|███████   | 34/48 [00:40<00:13,  1.06it/s]Evaluating:  73%|███████▎  | 35/48 [00:41<00:12,  1.07it/s]Evaluating:  75%|███████▌  | 36/48 [00:42<00:11,  1.06it/s]Evaluating:  77%|███████▋  | 37/48 [00:43<00:10,  1.07it/s]Evaluating:  79%|███████▉  | 38/48 [00:44<00:09,  1.06it/s]Evaluating:  81%|████████▏ | 39/48 [00:45<00:08,  1.06it/s]Evaluating:  83%|████████▎ | 40/48 [00:46<00:07,  1.06it/s]Evaluating:  85%|████████▌ | 41/48 [00:47<00:06,  1.06it/s]Evaluating:  88%|████████▊ | 42/48 [00:48<00:05,  1.06it/s]Evaluating:  90%|████████▉ | 43/48 [00:49<00:04,  1.06it/s]Evaluating:  92%|█████████▏| 44/48 [00:50<00:03,  1.07it/s]Evaluating:  94%|█████████▍| 45/48 [00:51<00:02,  1.06it/s]Evaluating:  96%|█████████▌| 46/48 [00:52<00:01,  1.06it/s]Evaluating:  98%|█████████▊| 47/48 [00:53<00:00,  1.07it/s]Evaluating: 100%|██████████| 48/48 [00:53<00:00,  1.35it/s]Evaluating: 100%|██████████| 48/48 [00:53<00:00,  1.11s/it]
+04/20/2026 20:26:05 - INFO - __main__ -   ***** Eval results  *****
+04/20/2026 20:26:05 - INFO - __main__ -     acc = 0.9603174603174603
+04/20/2026 20:26:05 - INFO - __main__ -     f1 = 0.9603174603174603
+Instance weight shape: (378,)
+(378,)
+(378,)
+accuracy 2
+f1 2
+INFO  
+============================================================
+INFO  Evaluating: train=early  test=mid
+INFO  ============================================================
+INFO  [eval/early→mid] /home/hice1/jvarma3/.conda/envs/llama/bin/python -m hf.run --model_type roberta --model_name_or_path data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512 --name basic --do_eval --eval_partition test --data_dir data/annotations/relevance_and_tone/early/relevance/splits/basic/ --train all.jsonlist --test_data_dir data/annotations/relevance_and_tone/mid/relevance/splits/basic/folds/0/ --test test.jsonlist --max_seq_length 512 --per_gpu_eval_batch_size=8 --output_dir results/temporal_generalization/roberta-base_s42/train_early_test_mid --overwrite_cache --overwrite_output_dir --metrics accuracy,f1 --seed 42
+04/20/2026 20:26:15 - WARNING - __main__ -   Process rank: -1, device: cpu, n_gpu: 0, distributed training: False, 16-bits training: False
+['no', 'yes']
+Constructing processor:
+Label list: ['no', 'yes']
+Label field: label
+Text fields: text None
+Weight field: None
+Num labels: 2
+config data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512
+tokenizer data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512
+model data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 5123.09it/s]
+04/20/2026 20:26:15 - INFO - __main__ -   Training/evaluation parameters Namespace(model_type='roberta', model_name_or_path='data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512', name='basic', data_dir='data/annotations/relevance_and_tone/early/relevance/splits/basic/', train='all.jsonlist', dev='dev.jsonlist', test='test.jsonlist', test_data_dir='data/annotations/relevance_and_tone/mid/relevance/splits/basic/folds/0/', output_dir='results/temporal_generalization/roberta-base_s42/train_early_test_mid', text_field='text', text_field_b=None, label_field='label', weight_field=None, metrics='accuracy,f1', config_name='', tokenizer_name='', cache_dir='', max_seq_length=512, do_train=False, do_eval=True, eval_partition='test', predict=None, default_label=None, pred_file_name='preds', evaluate_during_training=False, do_lower_case=False, per_gpu_train_batch_size=8, per_gpu_eval_batch_size=8, gradient_accumulation_steps=1, learning_rate=5e-05, weight_decay=0.0, adam_epsilon=1e-08, max_grad_norm=1.0, num_train_epochs=3.0, max_steps=-1, warmup_steps=0, logging_steps=500, save_steps=500, eval_all_checkpoints=False, no_cuda=False, overwrite_output_dir=True, overwrite_cache=True, seed=42, fp16=False, fp16_opt_level='O1', local_rank=-1, server_ip='', server_port='', n_gpu=0, device=device(type='cpu'), num_labels=2, output_mode='classification')
+04/20/2026 20:26:15 - INFO - __main__ -   Evaluate the following checkpoints: ['data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512']
+Do evaluation:
+checkpoint: data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 4562.01it/s]
+04/20/2026 20:26:16 - INFO - __main__ -   Creating features from dataset file at data/annotations/relevance_and_tone/early/relevance/splits/basic/
+04/20/2026 20:26:16 - INFO - hf.processors -   *** Example 0 ***
+04/20/2026 20:26:16 - INFO - hf.processors -   guid: test-0
+04/20/2026 20:26:16 - INFO - hf.processors -   example text_a: When the sales tax was first introduced in Canada we were rather fortunately situated. in that it was possible to arrange for the administration of the tax through the customs houses which are scattered all along the international boundary line and at the Atlantic and Pacific ports. The collectors of customs. with their officers. were made collectors of saie. tax. so that you had there the nucleus of an administrative organization. Additional clerical help was given in the larger centers. such as Montreal.
+04/20/2026 20:26:16 - INFO - hf.processors -   example text_b: None
+04/20/2026 20:26:16 - INFO - hf.processors -   input_ids: 0 1779 5 647 629 21 78 2942 11 896 52 58 1195 33034 17949 4 11 14 24 21 678 7 17999 13 5 942 9 5 629 149 5 10102 3960 61 32 12827 70 552 5 758 16358 516 8 23 5 5038 8 3073 9507 4 20 24122 9 10102 4 19 49 1024 4 58 156 24122 9 2241 324 4 629 4 98 14 47 56 89 5 38531 9 41 6833 1651 4 7655 32391 3569 244 21 576 11 5 2514 5228 4 215 25 5817 4 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+04/20/2026 20:26:16 - INFO - hf.processors -   attention_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/20/2026 20:26:16 - INFO - hf.processors -   label: no (id = 0)
+04/20/2026 20:26:16 - INFO - __main__ -   Saving features into cached file data/annotations/relevance_and_tone/early/relevance/splits/basic/cached_test.jsonlist_temporal_early_roberta-base_s42_lr2e-05_msl512_512_basic
+04/20/2026 20:26:16 - INFO - __main__ -   ***** Running evaluation  *****
+04/20/2026 20:26:16 - INFO - __main__ -     Num examples = 144
+04/20/2026 20:26:16 - INFO - __main__ -     Batch size = 8
+['accuracy', 'f1']
+cached_features_file: data/annotations/relevance_and_tone/early/relevance/splits/basic/cached_test.jsonlist_temporal_early_roberta-base_s42_lr2e-05_msl512_512_basic
+True
+num examples: 144
+example:
+InputExampleWeighted(guid='test-0', text_a='When the sales tax was first introduced in Canada we were rather fortunately situated. in that it was possible to arrange for the administration of the tax through the customs houses which are scattered all along the international boundary line and at the Atlantic and Pacific ports. The collectors of customs. with their officers. were made collectors of saie. tax. so that you had there the nucleus of an administrative organization. Additional clerical help was given in the larger centers. such as Montreal.', text_b=None, label='no')
+Evaluating:   0%|          | 0/18 [00:00<?, ?it/s]Evaluating:   6%|▌         | 1/18 [00:01<00:18,  1.09s/it]Evaluating:  11%|█         | 2/18 [00:02<00:15,  1.01it/s]Evaluating:  17%|█▋        | 3/18 [00:02<00:14,  1.04it/s]Evaluating:  22%|██▏       | 4/18 [00:03<00:13,  1.06it/s]Evaluating:  28%|██▊       | 5/18 [00:04<00:12,  1.06it/s]Evaluating:  33%|███▎      | 6/18 [00:05<00:11,  1.06it/s]Evaluating:  39%|███▉      | 7/18 [00:06<00:10,  1.07it/s]Evaluating:  44%|████▍     | 8/18 [00:07<00:09,  1.07it/s]Evaluating:  50%|█████     | 9/18 [00:08<00:08,  1.08it/s]Evaluating:  56%|█████▌    | 10/18 [00:09<00:07,  1.08it/s]Evaluating:  61%|██████    | 11/18 [00:10<00:06,  1.08it/s]Evaluating:  67%|██████▋   | 12/18 [00:11<00:05,  1.08it/s]Evaluating:  72%|███████▏  | 13/18 [00:12<00:04,  1.08it/s]Evaluating:  78%|███████▊  | 14/18 [00:13<00:03,  1.08it/s]Evaluating:  83%|████████▎ | 15/18 [00:14<00:02,  1.08it/s]Evaluating:  89%|████████▉ | 16/18 [00:14<00:01,  1.08it/s]Evaluating:  94%|█████████▍| 17/18 [00:15<00:00,  1.07it/s]Evaluating: 100%|██████████| 18/18 [00:16<00:00,  1.08it/s]Evaluating: 100%|██████████| 18/18 [00:16<00:00,  1.07it/s]
+04/20/2026 20:26:33 - INFO - __main__ -   ***** Eval results  *****
+04/20/2026 20:26:33 - INFO - __main__ -     acc = 0.8541666666666666
+04/20/2026 20:26:33 - INFO - __main__ -     f1 = 0.8541666666666666
+Instance weight shape: (144,)
+(144,)
+(144,)
+accuracy 2
+f1 2
+INFO  
+============================================================
+INFO  Evaluating: train=early  test=modern
+INFO  ============================================================
+INFO  [eval/early→modern] /home/hice1/jvarma3/.conda/envs/llama/bin/python -m hf.run --model_type roberta --model_name_or_path data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512 --name basic --do_eval --eval_partition test --data_dir data/annotations/relevance_and_tone/early/relevance/splits/basic/ --train all.jsonlist --test_data_dir data/annotations/relevance_and_tone/modern/relevance/splits/basic/folds/0/ --test test.jsonlist --max_seq_length 512 --per_gpu_eval_batch_size=8 --output_dir results/temporal_generalization/roberta-base_s42/train_early_test_modern --overwrite_cache --overwrite_output_dir --metrics accuracy,f1 --seed 42
+04/20/2026 20:26:42 - WARNING - __main__ -   Process rank: -1, device: cpu, n_gpu: 0, distributed training: False, 16-bits training: False
+['no', 'yes']
+Constructing processor:
+Label list: ['no', 'yes']
+Label field: label
+Text fields: text None
+Weight field: None
+Num labels: 2
+config data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512
+tokenizer data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512
+model data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 5203.75it/s]
+04/20/2026 20:26:43 - INFO - __main__ -   Training/evaluation parameters Namespace(model_type='roberta', model_name_or_path='data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512', name='basic', data_dir='data/annotations/relevance_and_tone/early/relevance/splits/basic/', train='all.jsonlist', dev='dev.jsonlist', test='test.jsonlist', test_data_dir='data/annotations/relevance_and_tone/modern/relevance/splits/basic/folds/0/', output_dir='results/temporal_generalization/roberta-base_s42/train_early_test_modern', text_field='text', text_field_b=None, label_field='label', weight_field=None, metrics='accuracy,f1', config_name='', tokenizer_name='', cache_dir='', max_seq_length=512, do_train=False, do_eval=True, eval_partition='test', predict=None, default_label=None, pred_file_name='preds', evaluate_during_training=False, do_lower_case=False, per_gpu_train_batch_size=8, per_gpu_eval_batch_size=8, gradient_accumulation_steps=1, learning_rate=5e-05, weight_decay=0.0, adam_epsilon=1e-08, max_grad_norm=1.0, num_train_epochs=3.0, max_steps=-1, warmup_steps=0, logging_steps=500, save_steps=500, eval_all_checkpoints=False, no_cuda=False, overwrite_output_dir=True, overwrite_cache=True, seed=42, fp16=False, fp16_opt_level='O1', local_rank=-1, server_ip='', server_port='', n_gpu=0, device=device(type='cpu'), num_labels=2, output_mode='classification')
+04/20/2026 20:26:43 - INFO - __main__ -   Evaluate the following checkpoints: ['data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512']
+Do evaluation:
+checkpoint: data/annotations/relevance_and_tone/early/relevance/splits/basic/bert/temporal_early_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 4600.05it/s]
+04/20/2026 20:26:43 - INFO - __main__ -   Creating features from dataset file at data/annotations/relevance_and_tone/early/relevance/splits/basic/
+04/20/2026 20:26:43 - INFO - hf.processors -   *** Example 0 ***
+04/20/2026 20:26:43 - INFO - hf.processors -   guid: test-0
+04/20/2026 20:26:43 - INFO - hf.processors -   example text_a: only firstdegree relatives. such as parents. children. and siblings. are eligible for permission to emigrate. This decree effectively prevents thousands of Jews from ever applying for. much less receiving. visas. In 1986. Jewish emigration from the Soviet Union totaled only 914.
+04/20/2026 20:26:43 - INFO - hf.processors -   example text_b: None
+04/20/2026 20:26:43 - INFO - hf.processors -   input_ids: 0 8338 78 5743 6774 4 215 25 1041 4 408 4 8 10384 4 32 4973 13 5537 7 2841 38476 4 152 20156 4296 17410 1583 9 8609 31 655 9889 13 4 203 540 2806 4 13570 4 96 11265 4 4586 2841 33836 31 5 8297 1332 15137 129 361 1570 4 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+04/20/2026 20:26:43 - INFO - hf.processors -   attention_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/20/2026 20:26:43 - INFO - hf.processors -   label: no (id = 0)
+04/20/2026 20:26:43 - INFO - __main__ -   Saving features into cached file data/annotations/relevance_and_tone/early/relevance/splits/basic/cached_test.jsonlist_temporal_early_roberta-base_s42_lr2e-05_msl512_512_basic
+04/20/2026 20:26:43 - INFO - __main__ -   ***** Running evaluation  *****
+04/20/2026 20:26:43 - INFO - __main__ -     Num examples = 240
+04/20/2026 20:26:43 - INFO - __main__ -     Batch size = 8
+['accuracy', 'f1']
+cached_features_file: data/annotations/relevance_and_tone/early/relevance/splits/basic/cached_test.jsonlist_temporal_early_roberta-base_s42_lr2e-05_msl512_512_basic
+True
+num examples: 240
+example:
+InputExampleWeighted(guid='test-0', text_a='only firstdegree relatives. such as parents. children. and siblings. are eligible for permission to emigrate. This decree effectively prevents thousands of Jews from ever applying for. much less receiving. visas. In 1986. Jewish emigration from the Soviet Union totaled only 914.', text_b=None, label='no')
+Evaluating:   0%|          | 0/30 [00:00<?, ?it/s]Evaluating:   3%|▎         | 1/30 [00:01<00:31,  1.09s/it]Evaluating:   7%|▋         | 2/30 [00:02<00:28,  1.02s/it]Evaluating:  10%|█         | 3/30 [00:02<00:26,  1.02it/s]Evaluating:  13%|█▎        | 4/30 [00:03<00:25,  1.03it/s]Evaluating:  17%|█▋        | 5/30 [00:04<00:23,  1.05it/s]Evaluating:  20%|██        | 6/30 [00:05<00:22,  1.05it/s]Evaluating:  23%|██▎       | 7/30 [00:06<00:21,  1.06it/s]Evaluating:  27%|██▋       | 8/30 [00:07<00:20,  1.07it/s]Evaluating:  30%|███       | 9/30 [00:08<00:19,  1.07it/s]Evaluating:  33%|███▎      | 10/30 [00:09<00:18,  1.07it/s]Evaluating:  37%|███▋      | 11/30 [00:10<00:17,  1.07it/s]Evaluating:  40%|████      | 12/30 [00:11<00:16,  1.08it/s]Evaluating:  43%|████▎     | 13/30 [00:12<00:15,  1.08it/s]Evaluating:  47%|████▋     | 14/30 [00:13<00:14,  1.08it/s]Evaluating:  50%|█████     | 15/30 [00:14<00:13,  1.08it/s]Evaluating:  53%|█████▎    | 16/30 [00:15<00:12,  1.08it/s]Evaluating:  57%|█████▋    | 17/30 [00:15<00:12,  1.08it/s]Evaluating:  60%|██████    | 18/30 [00:16<00:11,  1.08it/s]Evaluating:  63%|██████▎   | 19/30 [00:17<00:10,  1.08it/s]Evaluating:  67%|██████▋   | 20/30 [00:18<00:09,  1.09it/s]Evaluating:  70%|███████   | 21/30 [00:19<00:08,  1.09it/s]Evaluating:  73%|███████▎  | 22/30 [00:20<00:07,  1.06it/s]Evaluating:  77%|███████▋  | 23/30 [00:21<00:06,  1.07it/s]Evaluating:  80%|████████  | 24/30 [00:22<00:05,  1.07it/s]Evaluating:  83%|████████▎ | 25/30 [00:23<00:04,  1.08it/s]Evaluating:  87%|████████▋ | 26/30 [00:24<00:03,  1.07it/s]Evaluating:  90%|█████████ | 27/30 [00:25<00:02,  1.07it/s]Evaluating:  93%|█████████▎| 28/30 [00:26<00:01,  1.07it/s]Evaluating:  97%|█████████▋| 29/30 [00:27<00:00,  1.08it/s]Evaluating: 100%|██████████| 30/30 [00:28<00:00,  1.08it/s]Evaluating: 100%|██████████| 30/30 [00:28<00:00,  1.07it/s]
+04/20/2026 20:27:11 - INFO - __main__ -   ***** Eval results  *****
+04/20/2026 20:27:11 - INFO - __main__ -     acc = 0.8
+04/20/2026 20:27:11 - INFO - __main__ -     f1 = 0.8
+Instance weight shape: (240,)
+(240,)
+(240,)
+accuracy 2
+f1 2
+INFO  
+============================================================
+INFO  Evaluating: train=mid  test=early
+INFO  ============================================================
+INFO  [eval/mid→early] /home/hice1/jvarma3/.conda/envs/llama/bin/python -m hf.run --model_type roberta --model_name_or_path data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512 --name basic --do_eval --eval_partition test --data_dir data/annotations/relevance_and_tone/mid/relevance/splits/basic/ --train all.jsonlist --test_data_dir data/annotations/relevance_and_tone/early/relevance/splits/basic/folds/0/ --test test.jsonlist --max_seq_length 512 --per_gpu_eval_batch_size=8 --output_dir results/temporal_generalization/roberta-base_s42/train_mid_test_early --overwrite_cache --overwrite_output_dir --metrics accuracy,f1 --seed 42
+04/20/2026 20:27:21 - WARNING - __main__ -   Process rank: -1, device: cpu, n_gpu: 0, distributed training: False, 16-bits training: False
+['no', 'yes']
+Constructing processor:
+Label list: ['no', 'yes']
+Label field: label
+Text fields: text None
+Weight field: None
+Num labels: 2
+config data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512
+tokenizer data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512
+model data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights:   6%|▋         | 13/201 [00:00<00:01, 127.10it/s]Loading weights:  13%|█▎        | 26/201 [00:00<00:01, 90.91it/s] Loading weights:  18%|█▊        | 36/201 [00:00<00:01, 92.14it/s]Loading weights:  26%|██▌       | 52/201 [00:00<00:01, 113.46it/s]Loading weights:  39%|███▉      | 78/201 [00:00<00:00, 152.32it/s]Loading weights:  47%|████▋     | 94/201 [00:00<00:00, 144.53it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 258.15it/s]
+04/20/2026 20:27:22 - INFO - __main__ -   Training/evaluation parameters Namespace(model_type='roberta', model_name_or_path='data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512', name='basic', data_dir='data/annotations/relevance_and_tone/mid/relevance/splits/basic/', train='all.jsonlist', dev='dev.jsonlist', test='test.jsonlist', test_data_dir='data/annotations/relevance_and_tone/early/relevance/splits/basic/folds/0/', output_dir='results/temporal_generalization/roberta-base_s42/train_mid_test_early', text_field='text', text_field_b=None, label_field='label', weight_field=None, metrics='accuracy,f1', config_name='', tokenizer_name='', cache_dir='', max_seq_length=512, do_train=False, do_eval=True, eval_partition='test', predict=None, default_label=None, pred_file_name='preds', evaluate_during_training=False, do_lower_case=False, per_gpu_train_batch_size=8, per_gpu_eval_batch_size=8, gradient_accumulation_steps=1, learning_rate=5e-05, weight_decay=0.0, adam_epsilon=1e-08, max_grad_norm=1.0, num_train_epochs=3.0, max_steps=-1, warmup_steps=0, logging_steps=500, save_steps=500, eval_all_checkpoints=False, no_cuda=False, overwrite_output_dir=True, overwrite_cache=True, seed=42, fp16=False, fp16_opt_level='O1', local_rank=-1, server_ip='', server_port='', n_gpu=0, device=device(type='cpu'), num_labels=2, output_mode='classification')
+04/20/2026 20:27:23 - INFO - __main__ -   Evaluate the following checkpoints: ['data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512']
+Do evaluation:
+checkpoint: data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 4704.39it/s]
+04/20/2026 20:27:23 - INFO - __main__ -   Creating features from dataset file at data/annotations/relevance_and_tone/mid/relevance/splits/basic/
+04/20/2026 20:27:23 - INFO - hf.processors -   *** Example 0 ***
+04/20/2026 20:27:23 - INFO - hf.processors -   guid: test-0
+04/20/2026 20:27:23 - INFO - hf.processors -   example text_a: Secondly. "qualifications:" what are they? Tley are resilence. age. and nine years citizenship. and they are nothing more. This is so stated by the Senator from Iudiana. the Senator frito Ohio. [Mr. Triun.qx.] the Senator front Missouri.
+04/20/2026 20:27:23 - INFO - hf.processors -   example text_b: None
+04/20/2026 20:27:23 - INFO - hf.processors -   input_ids: 0 45527 4 22 27702 14868 36856 99 32 51 116 255 607 32 49342 4086 4 1046 4 8 1117 107 8860 4 8 51 32 1085 55 4 152 16 98 2305 30 5 4336 31 38 1906 8878 4 5 4336 856 24913 2042 4 646 10980 4 6892 879 4 1343 1178 21838 5 4336 760 4630 4 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+04/20/2026 20:27:23 - INFO - hf.processors -   attention_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/20/2026 20:27:23 - INFO - hf.processors -   label: no (id = 0)
+04/20/2026 20:27:23 - INFO - __main__ -   Saving features into cached file data/annotations/relevance_and_tone/mid/relevance/splits/basic/cached_test.jsonlist_temporal_mid_roberta-base_s42_lr2e-05_msl512_512_basic
+04/20/2026 20:27:23 - INFO - __main__ -   ***** Running evaluation  *****
+04/20/2026 20:27:23 - INFO - __main__ -     Num examples = 378
+04/20/2026 20:27:23 - INFO - __main__ -     Batch size = 8
+['accuracy', 'f1']
+cached_features_file: data/annotations/relevance_and_tone/mid/relevance/splits/basic/cached_test.jsonlist_temporal_mid_roberta-base_s42_lr2e-05_msl512_512_basic
+True
+num examples: 378
+example:
+InputExampleWeighted(guid='test-0', text_a='Secondly. "qualifications:" what are they? Tley are resilence. age. and nine years citizenship. and they are nothing more. This is so stated by the Senator from Iudiana. the Senator frito Ohio. [Mr. Triun.qx.] the Senator front Missouri.', text_b=None, label='no')
+Evaluating:   0%|          | 0/48 [00:00<?, ?it/s]Evaluating:   2%|▏         | 1/48 [00:06<05:13,  6.68s/it]Evaluating:   4%|▍         | 2/48 [00:07<02:37,  3.42s/it]Evaluating:   6%|▋         | 3/48 [00:08<01:43,  2.31s/it]Evaluating:   8%|▊         | 4/48 [00:09<01:17,  1.77s/it]Evaluating:  10%|█         | 5/48 [00:10<01:03,  1.49s/it]Evaluating:  12%|█▎        | 6/48 [00:11<00:54,  1.31s/it]Evaluating:  15%|█▍        | 7/48 [00:12<00:48,  1.18s/it]Evaluating:  17%|█▋        | 8/48 [00:13<00:44,  1.11s/it]Evaluating:  19%|█▉        | 9/48 [00:14<00:41,  1.05s/it]Evaluating:  21%|██        | 10/48 [00:15<00:38,  1.02s/it]Evaluating:  23%|██▎       | 11/48 [00:16<00:36,  1.01it/s]Evaluating:  25%|██▌       | 12/48 [00:17<00:35,  1.02it/s]Evaluating:  27%|██▋       | 13/48 [00:18<00:33,  1.03it/s]Evaluating:  29%|██▉       | 14/48 [00:19<00:32,  1.05it/s]Evaluating:  31%|███▏      | 15/48 [00:20<00:31,  1.06it/s]Evaluating:  33%|███▎      | 16/48 [00:21<00:30,  1.06it/s]Evaluating:  35%|███▌      | 17/48 [00:21<00:28,  1.07it/s]Evaluating:  38%|███▊      | 18/48 [00:22<00:27,  1.07it/s]Evaluating:  40%|███▉      | 19/48 [00:23<00:27,  1.07it/s]Evaluating:  42%|████▏     | 20/48 [00:24<00:26,  1.07it/s]Evaluating:  44%|████▍     | 21/48 [00:25<00:25,  1.07it/s]Evaluating:  46%|████▌     | 22/48 [00:26<00:24,  1.07it/s]Evaluating:  48%|████▊     | 23/48 [00:27<00:23,  1.08it/s]Evaluating:  50%|█████     | 24/48 [00:28<00:22,  1.08it/s]Evaluating:  52%|█████▏    | 25/48 [00:29<00:21,  1.08it/s]Evaluating:  54%|█████▍    | 26/48 [00:30<00:20,  1.08it/s]Evaluating:  56%|█████▋    | 27/48 [00:31<00:19,  1.09it/s]Evaluating:  58%|█████▊    | 28/48 [00:32<00:18,  1.08it/s]Evaluating:  60%|██████    | 29/48 [00:33<00:17,  1.08it/s]Evaluating:  62%|██████▎   | 30/48 [00:34<00:16,  1.08it/s]Evaluating:  65%|██████▍   | 31/48 [00:34<00:15,  1.08it/s]Evaluating:  67%|██████▋   | 32/48 [00:35<00:14,  1.09it/s]Evaluating:  69%|██████▉   | 33/48 [00:36<00:13,  1.09it/s]Evaluating:  71%|███████   | 34/48 [00:37<00:12,  1.09it/s]Evaluating:  73%|███████▎  | 35/48 [00:38<00:11,  1.09it/s]Evaluating:  75%|███████▌  | 36/48 [00:39<00:11,  1.09it/s]Evaluating:  77%|███████▋  | 37/48 [00:40<00:10,  1.08it/s]Evaluating:  79%|███████▉  | 38/48 [00:41<00:09,  1.09it/s]Evaluating:  81%|████████▏ | 39/48 [00:42<00:08,  1.09it/s]Evaluating:  83%|████████▎ | 40/48 [00:43<00:07,  1.08it/s]Evaluating:  85%|████████▌ | 41/48 [00:44<00:06,  1.07it/s]Evaluating:  88%|████████▊ | 42/48 [00:45<00:05,  1.08it/s]Evaluating:  90%|████████▉ | 43/48 [00:45<00:04,  1.08it/s]Evaluating:  92%|█████████▏| 44/48 [00:46<00:03,  1.08it/s]Evaluating:  94%|█████████▍| 45/48 [00:47<00:02,  1.07it/s]Evaluating:  96%|█████████▌| 46/48 [00:48<00:01,  1.08it/s]Evaluating:  98%|█████████▊| 47/48 [00:49<00:00,  1.08it/s]Evaluating: 100%|██████████| 48/48 [00:49<00:00,  1.38it/s]Evaluating: 100%|██████████| 48/48 [00:49<00:00,  1.04s/it]
+04/20/2026 20:28:13 - INFO - __main__ -   ***** Eval results  *****
+04/20/2026 20:28:13 - INFO - __main__ -     acc = 0.8624338624338624
+04/20/2026 20:28:13 - INFO - __main__ -     f1 = 0.8624338624338624
+Instance weight shape: (378,)
+(378,)
+(378,)
+accuracy 2
+f1 2
+INFO  
+============================================================
+INFO  Evaluating: train=mid  test=mid
+INFO  ============================================================
+INFO  [eval/mid→mid] /home/hice1/jvarma3/.conda/envs/llama/bin/python -m hf.run --model_type roberta --model_name_or_path data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512 --name basic --do_eval --eval_partition test --data_dir data/annotations/relevance_and_tone/mid/relevance/splits/basic/ --train all.jsonlist --test_data_dir data/annotations/relevance_and_tone/mid/relevance/splits/basic/folds/0/ --test test.jsonlist --max_seq_length 512 --per_gpu_eval_batch_size=8 --output_dir results/temporal_generalization/roberta-base_s42/train_mid_test_mid --overwrite_cache --overwrite_output_dir --metrics accuracy,f1 --seed 42
+04/20/2026 20:28:23 - WARNING - __main__ -   Process rank: -1, device: cpu, n_gpu: 0, distributed training: False, 16-bits training: False
+['no', 'yes']
+Constructing processor:
+Label list: ['no', 'yes']
+Label field: label
+Text fields: text None
+Weight field: None
+Num labels: 2
+config data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512
+tokenizer data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512
+model data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 5104.20it/s]
+04/20/2026 20:28:24 - INFO - __main__ -   Training/evaluation parameters Namespace(model_type='roberta', model_name_or_path='data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512', name='basic', data_dir='data/annotations/relevance_and_tone/mid/relevance/splits/basic/', train='all.jsonlist', dev='dev.jsonlist', test='test.jsonlist', test_data_dir='data/annotations/relevance_and_tone/mid/relevance/splits/basic/folds/0/', output_dir='results/temporal_generalization/roberta-base_s42/train_mid_test_mid', text_field='text', text_field_b=None, label_field='label', weight_field=None, metrics='accuracy,f1', config_name='', tokenizer_name='', cache_dir='', max_seq_length=512, do_train=False, do_eval=True, eval_partition='test', predict=None, default_label=None, pred_file_name='preds', evaluate_during_training=False, do_lower_case=False, per_gpu_train_batch_size=8, per_gpu_eval_batch_size=8, gradient_accumulation_steps=1, learning_rate=5e-05, weight_decay=0.0, adam_epsilon=1e-08, max_grad_norm=1.0, num_train_epochs=3.0, max_steps=-1, warmup_steps=0, logging_steps=500, save_steps=500, eval_all_checkpoints=False, no_cuda=False, overwrite_output_dir=True, overwrite_cache=True, seed=42, fp16=False, fp16_opt_level='O1', local_rank=-1, server_ip='', server_port='', n_gpu=0, device=device(type='cpu'), num_labels=2, output_mode='classification')
+04/20/2026 20:28:24 - INFO - __main__ -   Evaluate the following checkpoints: ['data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512']
+Do evaluation:
+checkpoint: data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 4463.35it/s]
+04/20/2026 20:28:24 - INFO - __main__ -   Creating features from dataset file at data/annotations/relevance_and_tone/mid/relevance/splits/basic/
+04/20/2026 20:28:24 - INFO - hf.processors -   *** Example 0 ***
+04/20/2026 20:28:24 - INFO - hf.processors -   guid: test-0
+04/20/2026 20:28:24 - INFO - hf.processors -   example text_a: When the sales tax was first introduced in Canada we were rather fortunately situated. in that it was possible to arrange for the administration of the tax through the customs houses which are scattered all along the international boundary line and at the Atlantic and Pacific ports. The collectors of customs. with their officers. were made collectors of saie. tax. so that you had there the nucleus of an administrative organization. Additional clerical help was given in the larger centers. such as Montreal.
+04/20/2026 20:28:24 - INFO - hf.processors -   example text_b: None
+04/20/2026 20:28:24 - INFO - hf.processors -   input_ids: 0 1779 5 647 629 21 78 2942 11 896 52 58 1195 33034 17949 4 11 14 24 21 678 7 17999 13 5 942 9 5 629 149 5 10102 3960 61 32 12827 70 552 5 758 16358 516 8 23 5 5038 8 3073 9507 4 20 24122 9 10102 4 19 49 1024 4 58 156 24122 9 2241 324 4 629 4 98 14 47 56 89 5 38531 9 41 6833 1651 4 7655 32391 3569 244 21 576 11 5 2514 5228 4 215 25 5817 4 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+04/20/2026 20:28:24 - INFO - hf.processors -   attention_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/20/2026 20:28:24 - INFO - hf.processors -   label: no (id = 0)
+04/20/2026 20:28:24 - INFO - __main__ -   Saving features into cached file data/annotations/relevance_and_tone/mid/relevance/splits/basic/cached_test.jsonlist_temporal_mid_roberta-base_s42_lr2e-05_msl512_512_basic
+04/20/2026 20:28:24 - INFO - __main__ -   ***** Running evaluation  *****
+04/20/2026 20:28:24 - INFO - __main__ -     Num examples = 144
+04/20/2026 20:28:24 - INFO - __main__ -     Batch size = 8
+['accuracy', 'f1']
+cached_features_file: data/annotations/relevance_and_tone/mid/relevance/splits/basic/cached_test.jsonlist_temporal_mid_roberta-base_s42_lr2e-05_msl512_512_basic
+True
+num examples: 144
+example:
+InputExampleWeighted(guid='test-0', text_a='When the sales tax was first introduced in Canada we were rather fortunately situated. in that it was possible to arrange for the administration of the tax through the customs houses which are scattered all along the international boundary line and at the Atlantic and Pacific ports. The collectors of customs. with their officers. were made collectors of saie. tax. so that you had there the nucleus of an administrative organization. Additional clerical help was given in the larger centers. such as Montreal.', text_b=None, label='no')
+Evaluating:   0%|          | 0/18 [00:00<?, ?it/s]Evaluating:   6%|▌         | 1/18 [00:01<00:19,  1.17s/it]Evaluating:  11%|█         | 2/18 [00:02<00:16,  1.05s/it]Evaluating:  17%|█▋        | 3/18 [00:03<00:15,  1.01s/it]Evaluating:  22%|██▏       | 4/18 [00:04<00:14,  1.01s/it]Evaluating:  28%|██▊       | 5/18 [00:05<00:13,  1.00s/it]Evaluating:  33%|███▎      | 6/18 [00:06<00:11,  1.00it/s]Evaluating:  39%|███▉      | 7/18 [00:07<00:10,  1.02it/s]Evaluating:  44%|████▍     | 8/18 [00:08<00:09,  1.02it/s]Evaluating:  50%|█████     | 9/18 [00:08<00:08,  1.03it/s]Evaluating:  56%|█████▌    | 10/18 [00:09<00:07,  1.03it/s]Evaluating:  61%|██████    | 11/18 [00:10<00:06,  1.03it/s]Evaluating:  67%|██████▋   | 12/18 [00:11<00:05,  1.04it/s]Evaluating:  72%|███████▏  | 13/18 [00:12<00:04,  1.04it/s]Evaluating:  78%|███████▊  | 14/18 [00:13<00:03,  1.02it/s]Evaluating:  83%|████████▎ | 15/18 [00:14<00:02,  1.02it/s]Evaluating:  89%|████████▉ | 16/18 [00:15<00:01,  1.02it/s]Evaluating:  94%|█████████▍| 17/18 [00:16<00:00,  1.03it/s]Evaluating: 100%|██████████| 18/18 [00:17<00:00,  1.04it/s]Evaluating: 100%|██████████| 18/18 [00:17<00:00,  1.02it/s]
+04/20/2026 20:28:42 - INFO - __main__ -   ***** Eval results  *****
+04/20/2026 20:28:42 - INFO - __main__ -     acc = 0.9722222222222222
+04/20/2026 20:28:42 - INFO - __main__ -     f1 = 0.9722222222222222
+Instance weight shape: (144,)
+(144,)
+(144,)
+accuracy 2
+f1 2
+INFO  
+============================================================
+INFO  Evaluating: train=mid  test=modern
+INFO  ============================================================
+INFO  [eval/mid→modern] /home/hice1/jvarma3/.conda/envs/llama/bin/python -m hf.run --model_type roberta --model_name_or_path data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512 --name basic --do_eval --eval_partition test --data_dir data/annotations/relevance_and_tone/mid/relevance/splits/basic/ --train all.jsonlist --test_data_dir data/annotations/relevance_and_tone/modern/relevance/splits/basic/folds/0/ --test test.jsonlist --max_seq_length 512 --per_gpu_eval_batch_size=8 --output_dir results/temporal_generalization/roberta-base_s42/train_mid_test_modern --overwrite_cache --overwrite_output_dir --metrics accuracy,f1 --seed 42
+04/20/2026 20:28:51 - WARNING - __main__ -   Process rank: -1, device: cpu, n_gpu: 0, distributed training: False, 16-bits training: False
+['no', 'yes']
+Constructing processor:
+Label list: ['no', 'yes']
+Label field: label
+Text fields: text None
+Weight field: None
+Num labels: 2
+config data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512
+tokenizer data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512
+model data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 5547.88it/s]
+04/20/2026 20:28:52 - INFO - __main__ -   Training/evaluation parameters Namespace(model_type='roberta', model_name_or_path='data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512', name='basic', data_dir='data/annotations/relevance_and_tone/mid/relevance/splits/basic/', train='all.jsonlist', dev='dev.jsonlist', test='test.jsonlist', test_data_dir='data/annotations/relevance_and_tone/modern/relevance/splits/basic/folds/0/', output_dir='results/temporal_generalization/roberta-base_s42/train_mid_test_modern', text_field='text', text_field_b=None, label_field='label', weight_field=None, metrics='accuracy,f1', config_name='', tokenizer_name='', cache_dir='', max_seq_length=512, do_train=False, do_eval=True, eval_partition='test', predict=None, default_label=None, pred_file_name='preds', evaluate_during_training=False, do_lower_case=False, per_gpu_train_batch_size=8, per_gpu_eval_batch_size=8, gradient_accumulation_steps=1, learning_rate=5e-05, weight_decay=0.0, adam_epsilon=1e-08, max_grad_norm=1.0, num_train_epochs=3.0, max_steps=-1, warmup_steps=0, logging_steps=500, save_steps=500, eval_all_checkpoints=False, no_cuda=False, overwrite_output_dir=True, overwrite_cache=True, seed=42, fp16=False, fp16_opt_level='O1', local_rank=-1, server_ip='', server_port='', n_gpu=0, device=device(type='cpu'), num_labels=2, output_mode='classification')
+04/20/2026 20:28:52 - INFO - __main__ -   Evaluate the following checkpoints: ['data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512']
+Do evaluation:
+checkpoint: data/annotations/relevance_and_tone/mid/relevance/splits/basic/bert/temporal_mid_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 4521.61it/s]
+04/20/2026 20:28:52 - INFO - __main__ -   Creating features from dataset file at data/annotations/relevance_and_tone/mid/relevance/splits/basic/
+04/20/2026 20:28:52 - INFO - hf.processors -   *** Example 0 ***
+04/20/2026 20:28:52 - INFO - hf.processors -   guid: test-0
+04/20/2026 20:28:52 - INFO - hf.processors -   example text_a: only firstdegree relatives. such as parents. children. and siblings. are eligible for permission to emigrate. This decree effectively prevents thousands of Jews from ever applying for. much less receiving. visas. In 1986. Jewish emigration from the Soviet Union totaled only 914.
+04/20/2026 20:28:52 - INFO - hf.processors -   example text_b: None
+04/20/2026 20:28:52 - INFO - hf.processors -   input_ids: 0 8338 78 5743 6774 4 215 25 1041 4 408 4 8 10384 4 32 4973 13 5537 7 2841 38476 4 152 20156 4296 17410 1583 9 8609 31 655 9889 13 4 203 540 2806 4 13570 4 96 11265 4 4586 2841 33836 31 5 8297 1332 15137 129 361 1570 4 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+04/20/2026 20:28:52 - INFO - hf.processors -   attention_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/20/2026 20:28:52 - INFO - hf.processors -   label: no (id = 0)
+04/20/2026 20:28:52 - INFO - __main__ -   Saving features into cached file data/annotations/relevance_and_tone/mid/relevance/splits/basic/cached_test.jsonlist_temporal_mid_roberta-base_s42_lr2e-05_msl512_512_basic
+04/20/2026 20:28:52 - INFO - __main__ -   ***** Running evaluation  *****
+04/20/2026 20:28:52 - INFO - __main__ -     Num examples = 240
+04/20/2026 20:28:52 - INFO - __main__ -     Batch size = 8
+['accuracy', 'f1']
+cached_features_file: data/annotations/relevance_and_tone/mid/relevance/splits/basic/cached_test.jsonlist_temporal_mid_roberta-base_s42_lr2e-05_msl512_512_basic
+True
+num examples: 240
+example:
+InputExampleWeighted(guid='test-0', text_a='only firstdegree relatives. such as parents. children. and siblings. are eligible for permission to emigrate. This decree effectively prevents thousands of Jews from ever applying for. much less receiving. visas. In 1986. Jewish emigration from the Soviet Union totaled only 914.', text_b=None, label='no')
+Evaluating:   0%|          | 0/30 [00:00<?, ?it/s]Evaluating:   3%|▎         | 1/30 [00:01<00:33,  1.16s/it]Evaluating:   7%|▋         | 2/30 [00:02<00:30,  1.07s/it]Evaluating:  10%|█         | 3/30 [00:03<00:27,  1.02s/it]Evaluating:  13%|█▎        | 4/30 [00:04<00:26,  1.01s/it]Evaluating:  17%|█▋        | 5/30 [00:05<00:24,  1.00it/s]Evaluating:  20%|██        | 6/30 [00:06<00:23,  1.02it/s]Evaluating:  23%|██▎       | 7/30 [00:07<00:22,  1.02it/s]Evaluating:  27%|██▋       | 8/30 [00:07<00:21,  1.04it/s]Evaluating:  30%|███       | 9/30 [00:08<00:20,  1.04it/s]Evaluating:  33%|███▎      | 10/30 [00:09<00:19,  1.05it/s]Evaluating:  37%|███▋      | 11/30 [00:10<00:17,  1.06it/s]Evaluating:  40%|████      | 12/30 [00:11<00:16,  1.06it/s]Evaluating:  43%|████▎     | 13/30 [00:12<00:16,  1.05it/s]Evaluating:  47%|████▋     | 14/30 [00:13<00:15,  1.05it/s]Evaluating:  50%|█████     | 15/30 [00:14<00:14,  1.06it/s]Evaluating:  53%|█████▎    | 16/30 [00:15<00:13,  1.05it/s]Evaluating:  57%|█████▋    | 17/30 [00:16<00:12,  1.05it/s]Evaluating:  60%|██████    | 18/30 [00:17<00:11,  1.06it/s]Evaluating:  63%|██████▎   | 19/30 [00:18<00:10,  1.06it/s]Evaluating:  67%|██████▋   | 20/30 [00:19<00:09,  1.07it/s]Evaluating:  70%|███████   | 21/30 [00:20<00:08,  1.07it/s]Evaluating:  73%|███████▎  | 22/30 [00:21<00:07,  1.07it/s]Evaluating:  77%|███████▋  | 23/30 [00:22<00:06,  1.07it/s]Evaluating:  80%|████████  | 24/30 [00:23<00:05,  1.07it/s]Evaluating:  83%|████████▎ | 25/30 [00:23<00:04,  1.07it/s]Evaluating:  87%|████████▋ | 26/30 [00:24<00:03,  1.07it/s]Evaluating:  90%|█████████ | 27/30 [00:25<00:02,  1.07it/s]Evaluating:  93%|█████████▎| 28/30 [00:26<00:01,  1.08it/s]Evaluating:  97%|█████████▋| 29/30 [00:27<00:00,  1.08it/s]Evaluating: 100%|██████████| 30/30 [00:28<00:00,  1.08it/s]Evaluating: 100%|██████████| 30/30 [00:28<00:00,  1.05it/s]
+04/20/2026 20:29:21 - INFO - __main__ -   ***** Eval results  *****
+04/20/2026 20:29:21 - INFO - __main__ -     acc = 0.825
+04/20/2026 20:29:21 - INFO - __main__ -     f1 = 0.825
+Instance weight shape: (240,)
+(240,)
+(240,)
+accuracy 2
+f1 2
+INFO  
+============================================================
+INFO  Evaluating: train=modern  test=early
+INFO  ============================================================
+INFO  [eval/modern→early] /home/hice1/jvarma3/.conda/envs/llama/bin/python -m hf.run --model_type roberta --model_name_or_path data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512 --name basic --do_eval --eval_partition test --data_dir data/annotations/relevance_and_tone/modern/relevance/splits/basic/ --train all.jsonlist --test_data_dir data/annotations/relevance_and_tone/early/relevance/splits/basic/folds/0/ --test test.jsonlist --max_seq_length 512 --per_gpu_eval_batch_size=8 --output_dir results/temporal_generalization/roberta-base_s42/train_modern_test_early --overwrite_cache --overwrite_output_dir --metrics accuracy,f1 --seed 42
+04/20/2026 20:29:31 - WARNING - __main__ -   Process rank: -1, device: cpu, n_gpu: 0, distributed training: False, 16-bits training: False
+['no', 'yes']
+Constructing processor:
+Label list: ['no', 'yes']
+Label field: label
+Text fields: text None
+Weight field: None
+Num labels: 2
+config data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512
+tokenizer data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512
+model data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights:   6%|▋         | 13/201 [00:00<00:01, 100.95it/s]Loading weights:  12%|█▏        | 24/201 [00:00<00:01, 92.62it/s] Loading weights:  17%|█▋        | 35/201 [00:00<00:01, 96.69it/s]Loading weights:  22%|██▏       | 45/201 [00:00<00:01, 81.99it/s]Loading weights:  27%|██▋       | 54/201 [00:00<00:01, 80.68it/s]Loading weights:  33%|███▎      | 66/201 [00:00<00:01, 83.46it/s]Loading weights:  39%|███▉      | 78/201 [00:00<00:01, 93.35it/s]Loading weights:  44%|████▍     | 88/201 [00:00<00:01, 88.68it/s]Loading weights:  49%|████▉     | 98/201 [00:01<00:01, 80.52it/s]Loading weights: 100%|██████████| 201/201 [00:01<00:00, 172.97it/s]
+04/20/2026 20:29:33 - INFO - __main__ -   Training/evaluation parameters Namespace(model_type='roberta', model_name_or_path='data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512', name='basic', data_dir='data/annotations/relevance_and_tone/modern/relevance/splits/basic/', train='all.jsonlist', dev='dev.jsonlist', test='test.jsonlist', test_data_dir='data/annotations/relevance_and_tone/early/relevance/splits/basic/folds/0/', output_dir='results/temporal_generalization/roberta-base_s42/train_modern_test_early', text_field='text', text_field_b=None, label_field='label', weight_field=None, metrics='accuracy,f1', config_name='', tokenizer_name='', cache_dir='', max_seq_length=512, do_train=False, do_eval=True, eval_partition='test', predict=None, default_label=None, pred_file_name='preds', evaluate_during_training=False, do_lower_case=False, per_gpu_train_batch_size=8, per_gpu_eval_batch_size=8, gradient_accumulation_steps=1, learning_rate=5e-05, weight_decay=0.0, adam_epsilon=1e-08, max_grad_norm=1.0, num_train_epochs=3.0, max_steps=-1, warmup_steps=0, logging_steps=500, save_steps=500, eval_all_checkpoints=False, no_cuda=False, overwrite_output_dir=True, overwrite_cache=True, seed=42, fp16=False, fp16_opt_level='O1', local_rank=-1, server_ip='', server_port='', n_gpu=0, device=device(type='cpu'), num_labels=2, output_mode='classification')
+04/20/2026 20:29:33 - INFO - __main__ -   Evaluate the following checkpoints: ['data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512']
+Do evaluation:
+checkpoint: data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 4487.25it/s]
+04/20/2026 20:29:33 - INFO - __main__ -   Creating features from dataset file at data/annotations/relevance_and_tone/modern/relevance/splits/basic/
+04/20/2026 20:29:33 - INFO - hf.processors -   *** Example 0 ***
+04/20/2026 20:29:33 - INFO - hf.processors -   guid: test-0
+04/20/2026 20:29:33 - INFO - hf.processors -   example text_a: Secondly. "qualifications:" what are they? Tley are resilence. age. and nine years citizenship. and they are nothing more. This is so stated by the Senator from Iudiana. the Senator frito Ohio. [Mr. Triun.qx.] the Senator front Missouri.
+04/20/2026 20:29:33 - INFO - hf.processors -   example text_b: None
+04/20/2026 20:29:33 - INFO - hf.processors -   input_ids: 0 45527 4 22 27702 14868 36856 99 32 51 116 255 607 32 49342 4086 4 1046 4 8 1117 107 8860 4 8 51 32 1085 55 4 152 16 98 2305 30 5 4336 31 38 1906 8878 4 5 4336 856 24913 2042 4 646 10980 4 6892 879 4 1343 1178 21838 5 4336 760 4630 4 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+04/20/2026 20:29:33 - INFO - hf.processors -   attention_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/20/2026 20:29:33 - INFO - hf.processors -   label: no (id = 0)
+04/20/2026 20:29:33 - INFO - __main__ -   Saving features into cached file data/annotations/relevance_and_tone/modern/relevance/splits/basic/cached_test.jsonlist_temporal_modern_roberta-base_s42_lr2e-05_msl512_512_basic
+04/20/2026 20:29:33 - INFO - __main__ -   ***** Running evaluation  *****
+04/20/2026 20:29:33 - INFO - __main__ -     Num examples = 378
+04/20/2026 20:29:33 - INFO - __main__ -     Batch size = 8
+['accuracy', 'f1']
+cached_features_file: data/annotations/relevance_and_tone/modern/relevance/splits/basic/cached_test.jsonlist_temporal_modern_roberta-base_s42_lr2e-05_msl512_512_basic
+True
+num examples: 378
+example:
+InputExampleWeighted(guid='test-0', text_a='Secondly. "qualifications:" what are they? Tley are resilence. age. and nine years citizenship. and they are nothing more. This is so stated by the Senator from Iudiana. the Senator frito Ohio. [Mr. Triun.qx.] the Senator front Missouri.', text_b=None, label='no')
+Evaluating:   0%|          | 0/48 [00:00<?, ?it/s]Evaluating:   2%|▏         | 1/48 [00:06<05:27,  6.97s/it]Evaluating:   4%|▍         | 2/48 [00:08<02:41,  3.52s/it]Evaluating:   6%|▋         | 3/48 [00:09<01:47,  2.39s/it]Evaluating:   8%|▊         | 4/48 [00:10<01:22,  1.88s/it]Evaluating:  10%|█         | 5/48 [00:11<01:08,  1.59s/it]Evaluating:  12%|█▎        | 6/48 [00:12<00:58,  1.39s/it]Evaluating:  15%|█▍        | 7/48 [00:13<00:51,  1.25s/it]Evaluating:  17%|█▋        | 8/48 [00:14<00:46,  1.16s/it]Evaluating:  19%|█▉        | 9/48 [00:15<00:42,  1.09s/it]Evaluating:  21%|██        | 10/48 [00:16<00:40,  1.06s/it]Evaluating:  23%|██▎       | 11/48 [00:17<00:37,  1.02s/it]Evaluating:  25%|██▌       | 12/48 [00:18<00:36,  1.01s/it]Evaluating:  27%|██▋       | 13/48 [00:19<00:34,  1.00it/s]Evaluating:  29%|██▉       | 14/48 [00:19<00:33,  1.01it/s]Evaluating:  31%|███▏      | 15/48 [00:20<00:32,  1.02it/s]Evaluating:  33%|███▎      | 16/48 [00:21<00:31,  1.02it/s]Evaluating:  35%|███▌      | 17/48 [00:23<00:31,  1.01s/it]Evaluating:  38%|███▊      | 18/48 [00:23<00:29,  1.00it/s]Evaluating:  40%|███▉      | 19/48 [00:24<00:28,  1.01it/s]Evaluating:  42%|████▏     | 20/48 [00:25<00:27,  1.01it/s]Evaluating:  44%|████▍     | 21/48 [00:26<00:26,  1.01it/s]Evaluating:  46%|████▌     | 22/48 [00:27<00:25,  1.02it/s]Evaluating:  48%|████▊     | 23/48 [00:28<00:24,  1.02it/s]Evaluating:  50%|█████     | 24/48 [00:29<00:23,  1.03it/s]Evaluating:  52%|█████▏    | 25/48 [00:30<00:22,  1.04it/s]Evaluating:  54%|█████▍    | 26/48 [00:31<00:21,  1.04it/s]Evaluating:  56%|█████▋    | 27/48 [00:32<00:20,  1.04it/s]Evaluating:  58%|█████▊    | 28/48 [00:33<00:19,  1.02it/s]Evaluating:  60%|██████    | 29/48 [00:34<00:18,  1.03it/s]Evaluating:  62%|██████▎   | 30/48 [00:35<00:17,  1.03it/s]Evaluating:  65%|██████▍   | 31/48 [00:36<00:16,  1.04it/s]Evaluating:  67%|██████▋   | 32/48 [00:37<00:15,  1.04it/s]Evaluating:  69%|██████▉   | 33/48 [00:38<00:14,  1.04it/s]Evaluating:  71%|███████   | 34/48 [00:39<00:13,  1.04it/s]Evaluating:  73%|███████▎  | 35/48 [00:40<00:12,  1.05it/s]Evaluating:  75%|███████▌  | 36/48 [00:41<00:11,  1.05it/s]Evaluating:  77%|███████▋  | 37/48 [00:42<00:10,  1.04it/s]Evaluating:  79%|███████▉  | 38/48 [00:43<00:09,  1.04it/s]Evaluating:  81%|████████▏ | 39/48 [00:44<00:08,  1.02it/s]Evaluating:  83%|████████▎ | 40/48 [00:45<00:07,  1.03it/s]Evaluating:  85%|████████▌ | 41/48 [00:46<00:06,  1.02it/s]Evaluating:  88%|████████▊ | 42/48 [00:47<00:05,  1.02it/s]Evaluating:  90%|████████▉ | 43/48 [00:48<00:04,  1.02it/s]Evaluating:  92%|█████████▏| 44/48 [00:49<00:03,  1.04it/s]Evaluating:  94%|█████████▍| 45/48 [00:50<00:03,  1.03s/it]Evaluating:  96%|█████████▌| 46/48 [00:51<00:02,  1.01s/it]Evaluating:  98%|█████████▊| 47/48 [00:52<00:01,  1.00s/it]Evaluating: 100%|██████████| 48/48 [00:52<00:00,  1.25it/s]Evaluating: 100%|██████████| 48/48 [00:52<00:00,  1.10s/it]
+04/20/2026 20:30:26 - INFO - __main__ -   ***** Eval results  *****
+04/20/2026 20:30:26 - INFO - __main__ -     acc = 0.8148148148148148
+04/20/2026 20:30:26 - INFO - __main__ -     f1 = 0.8148148148148148
+Instance weight shape: (378,)
+(378,)
+(378,)
+accuracy 2
+f1 2
+INFO  
+============================================================
+INFO  Evaluating: train=modern  test=mid
+INFO  ============================================================
+INFO  [eval/modern→mid] /home/hice1/jvarma3/.conda/envs/llama/bin/python -m hf.run --model_type roberta --model_name_or_path data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512 --name basic --do_eval --eval_partition test --data_dir data/annotations/relevance_and_tone/modern/relevance/splits/basic/ --train all.jsonlist --test_data_dir data/annotations/relevance_and_tone/mid/relevance/splits/basic/folds/0/ --test test.jsonlist --max_seq_length 512 --per_gpu_eval_batch_size=8 --output_dir results/temporal_generalization/roberta-base_s42/train_modern_test_mid --overwrite_cache --overwrite_output_dir --metrics accuracy,f1 --seed 42
+04/20/2026 20:30:35 - WARNING - __main__ -   Process rank: -1, device: cpu, n_gpu: 0, distributed training: False, 16-bits training: False
+['no', 'yes']
+Constructing processor:
+Label list: ['no', 'yes']
+Label field: label
+Text fields: text None
+Weight field: None
+Num labels: 2
+config data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512
+tokenizer data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512
+model data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 5069.94it/s]
+04/20/2026 20:30:36 - INFO - __main__ -   Training/evaluation parameters Namespace(model_type='roberta', model_name_or_path='data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512', name='basic', data_dir='data/annotations/relevance_and_tone/modern/relevance/splits/basic/', train='all.jsonlist', dev='dev.jsonlist', test='test.jsonlist', test_data_dir='data/annotations/relevance_and_tone/mid/relevance/splits/basic/folds/0/', output_dir='results/temporal_generalization/roberta-base_s42/train_modern_test_mid', text_field='text', text_field_b=None, label_field='label', weight_field=None, metrics='accuracy,f1', config_name='', tokenizer_name='', cache_dir='', max_seq_length=512, do_train=False, do_eval=True, eval_partition='test', predict=None, default_label=None, pred_file_name='preds', evaluate_during_training=False, do_lower_case=False, per_gpu_train_batch_size=8, per_gpu_eval_batch_size=8, gradient_accumulation_steps=1, learning_rate=5e-05, weight_decay=0.0, adam_epsilon=1e-08, max_grad_norm=1.0, num_train_epochs=3.0, max_steps=-1, warmup_steps=0, logging_steps=500, save_steps=500, eval_all_checkpoints=False, no_cuda=False, overwrite_output_dir=True, overwrite_cache=True, seed=42, fp16=False, fp16_opt_level='O1', local_rank=-1, server_ip='', server_port='', n_gpu=0, device=device(type='cpu'), num_labels=2, output_mode='classification')
+04/20/2026 20:30:36 - INFO - __main__ -   Evaluate the following checkpoints: ['data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512']
+Do evaluation:
+checkpoint: data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 4532.36it/s]
+04/20/2026 20:30:36 - INFO - __main__ -   Creating features from dataset file at data/annotations/relevance_and_tone/modern/relevance/splits/basic/
+04/20/2026 20:30:36 - INFO - hf.processors -   *** Example 0 ***
+04/20/2026 20:30:36 - INFO - hf.processors -   guid: test-0
+04/20/2026 20:30:36 - INFO - hf.processors -   example text_a: When the sales tax was first introduced in Canada we were rather fortunately situated. in that it was possible to arrange for the administration of the tax through the customs houses which are scattered all along the international boundary line and at the Atlantic and Pacific ports. The collectors of customs. with their officers. were made collectors of saie. tax. so that you had there the nucleus of an administrative organization. Additional clerical help was given in the larger centers. such as Montreal.
+04/20/2026 20:30:36 - INFO - hf.processors -   example text_b: None
+04/20/2026 20:30:36 - INFO - hf.processors -   input_ids: 0 1779 5 647 629 21 78 2942 11 896 52 58 1195 33034 17949 4 11 14 24 21 678 7 17999 13 5 942 9 5 629 149 5 10102 3960 61 32 12827 70 552 5 758 16358 516 8 23 5 5038 8 3073 9507 4 20 24122 9 10102 4 19 49 1024 4 58 156 24122 9 2241 324 4 629 4 98 14 47 56 89 5 38531 9 41 6833 1651 4 7655 32391 3569 244 21 576 11 5 2514 5228 4 215 25 5817 4 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+04/20/2026 20:30:36 - INFO - hf.processors -   attention_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/20/2026 20:30:36 - INFO - hf.processors -   label: no (id = 0)
+04/20/2026 20:30:36 - INFO - __main__ -   Saving features into cached file data/annotations/relevance_and_tone/modern/relevance/splits/basic/cached_test.jsonlist_temporal_modern_roberta-base_s42_lr2e-05_msl512_512_basic
+04/20/2026 20:30:37 - INFO - __main__ -   ***** Running evaluation  *****
+04/20/2026 20:30:37 - INFO - __main__ -     Num examples = 144
+04/20/2026 20:30:37 - INFO - __main__ -     Batch size = 8
+['accuracy', 'f1']
+cached_features_file: data/annotations/relevance_and_tone/modern/relevance/splits/basic/cached_test.jsonlist_temporal_modern_roberta-base_s42_lr2e-05_msl512_512_basic
+True
+num examples: 144
+example:
+InputExampleWeighted(guid='test-0', text_a='When the sales tax was first introduced in Canada we were rather fortunately situated. in that it was possible to arrange for the administration of the tax through the customs houses which are scattered all along the international boundary line and at the Atlantic and Pacific ports. The collectors of customs. with their officers. were made collectors of saie. tax. so that you had there the nucleus of an administrative organization. Additional clerical help was given in the larger centers. such as Montreal.', text_b=None, label='no')
+Evaluating:   0%|          | 0/18 [00:00<?, ?it/s]Evaluating:   6%|▌         | 1/18 [00:01<00:20,  1.23s/it]Evaluating:  11%|█         | 2/18 [00:02<00:17,  1.11s/it]Evaluating:  17%|█▋        | 3/18 [00:03<00:15,  1.06s/it]Evaluating:  22%|██▏       | 4/18 [00:04<00:14,  1.03s/it]Evaluating:  28%|██▊       | 5/18 [00:05<00:13,  1.03s/it]Evaluating:  33%|███▎      | 6/18 [00:06<00:12,  1.02s/it]Evaluating:  39%|███▉      | 7/18 [00:07<00:11,  1.01s/it]Evaluating:  44%|████▍     | 8/18 [00:08<00:10,  1.00s/it]Evaluating:  50%|█████     | 9/18 [00:09<00:09,  1.01s/it]Evaluating:  56%|█████▌    | 10/18 [00:10<00:08,  1.00s/it]Evaluating:  61%|██████    | 11/18 [00:11<00:07,  1.01s/it]Evaluating:  67%|██████▋   | 12/18 [00:12<00:06,  1.00s/it]Evaluating:  72%|███████▏  | 13/18 [00:13<00:05,  1.01s/it]Evaluating:  78%|███████▊  | 14/18 [00:14<00:03,  1.00it/s]Evaluating:  83%|████████▎ | 15/18 [00:15<00:03,  1.00s/it]Evaluating:  89%|████████▉ | 16/18 [00:16<00:02,  1.02s/it]Evaluating:  94%|█████████▍| 17/18 [00:17<00:01,  1.01s/it]Evaluating: 100%|██████████| 18/18 [00:18<00:00,  1.01it/s]Evaluating: 100%|██████████| 18/18 [00:18<00:00,  1.01s/it]
+04/20/2026 20:30:55 - INFO - __main__ -   ***** Eval results  *****
+04/20/2026 20:30:55 - INFO - __main__ -     acc = 0.9027777777777778
+04/20/2026 20:30:55 - INFO - __main__ -     f1 = 0.9027777777777778
+Instance weight shape: (144,)
+(144,)
+(144,)
+accuracy 2
+f1 2
+INFO  
+============================================================
+INFO  Evaluating: train=modern  test=modern
+INFO  ============================================================
+INFO  [eval/modern→modern] /home/hice1/jvarma3/.conda/envs/llama/bin/python -m hf.run --model_type roberta --model_name_or_path data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512 --name basic --do_eval --eval_partition test --data_dir data/annotations/relevance_and_tone/modern/relevance/splits/basic/ --train all.jsonlist --test_data_dir data/annotations/relevance_and_tone/modern/relevance/splits/basic/folds/0/ --test test.jsonlist --max_seq_length 512 --per_gpu_eval_batch_size=8 --output_dir results/temporal_generalization/roberta-base_s42/train_modern_test_modern --overwrite_cache --overwrite_output_dir --metrics accuracy,f1 --seed 42
+04/20/2026 20:31:04 - WARNING - __main__ -   Process rank: -1, device: cpu, n_gpu: 0, distributed training: False, 16-bits training: False
+['no', 'yes']
+Constructing processor:
+Label list: ['no', 'yes']
+Label field: label
+Text fields: text None
+Weight field: None
+Num labels: 2
+config data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512
+tokenizer data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512
+model data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 5718.73it/s]
+04/20/2026 20:31:05 - INFO - __main__ -   Training/evaluation parameters Namespace(model_type='roberta', model_name_or_path='data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512', name='basic', data_dir='data/annotations/relevance_and_tone/modern/relevance/splits/basic/', train='all.jsonlist', dev='dev.jsonlist', test='test.jsonlist', test_data_dir='data/annotations/relevance_and_tone/modern/relevance/splits/basic/folds/0/', output_dir='results/temporal_generalization/roberta-base_s42/train_modern_test_modern', text_field='text', text_field_b=None, label_field='label', weight_field=None, metrics='accuracy,f1', config_name='', tokenizer_name='', cache_dir='', max_seq_length=512, do_train=False, do_eval=True, eval_partition='test', predict=None, default_label=None, pred_file_name='preds', evaluate_during_training=False, do_lower_case=False, per_gpu_train_batch_size=8, per_gpu_eval_batch_size=8, gradient_accumulation_steps=1, learning_rate=5e-05, weight_decay=0.0, adam_epsilon=1e-08, max_grad_norm=1.0, num_train_epochs=3.0, max_steps=-1, warmup_steps=0, logging_steps=500, save_steps=500, eval_all_checkpoints=False, no_cuda=False, overwrite_output_dir=True, overwrite_cache=True, seed=42, fp16=False, fp16_opt_level='O1', local_rank=-1, server_ip='', server_port='', n_gpu=0, device=device(type='cpu'), num_labels=2, output_mode='classification')
+04/20/2026 20:31:05 - INFO - __main__ -   Evaluate the following checkpoints: ['data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512']
+Do evaluation:
+checkpoint: data/annotations/relevance_and_tone/modern/relevance/splits/basic/bert/temporal_modern_roberta-base_s42_lr2e-05_msl512
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]Loading weights: 100%|██████████| 201/201 [00:00<00:00, 4922.32it/s]
+04/20/2026 20:31:05 - INFO - __main__ -   Creating features from dataset file at data/annotations/relevance_and_tone/modern/relevance/splits/basic/
+04/20/2026 20:31:05 - INFO - hf.processors -   *** Example 0 ***
+04/20/2026 20:31:05 - INFO - hf.processors -   guid: test-0
+04/20/2026 20:31:05 - INFO - hf.processors -   example text_a: only firstdegree relatives. such as parents. children. and siblings. are eligible for permission to emigrate. This decree effectively prevents thousands of Jews from ever applying for. much less receiving. visas. In 1986. Jewish emigration from the Soviet Union totaled only 914.
+04/20/2026 20:31:05 - INFO - hf.processors -   example text_b: None
+04/20/2026 20:31:05 - INFO - hf.processors -   input_ids: 0 8338 78 5743 6774 4 215 25 1041 4 408 4 8 10384 4 32 4973 13 5537 7 2841 38476 4 152 20156 4296 17410 1583 9 8609 31 655 9889 13 4 203 540 2806 4 13570 4 96 11265 4 4586 2841 33836 31 5 8297 1332 15137 129 361 1570 4 2 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+04/20/2026 20:31:05 - INFO - hf.processors -   attention_mask: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+04/20/2026 20:31:05 - INFO - hf.processors -   label: no (id = 0)
+04/20/2026 20:31:05 - INFO - __main__ -   Saving features into cached file data/annotations/relevance_and_tone/modern/relevance/splits/basic/cached_test.jsonlist_temporal_modern_roberta-base_s42_lr2e-05_msl512_512_basic
+04/20/2026 20:31:05 - INFO - __main__ -   ***** Running evaluation  *****
+04/20/2026 20:31:05 - INFO - __main__ -     Num examples = 240
+04/20/2026 20:31:05 - INFO - __main__ -     Batch size = 8
+['accuracy', 'f1']
+cached_features_file: data/annotations/relevance_and_tone/modern/relevance/splits/basic/cached_test.jsonlist_temporal_modern_roberta-base_s42_lr2e-05_msl512_512_basic
+True
+num examples: 240
+example:
+InputExampleWeighted(guid='test-0', text_a='only firstdegree relatives. such as parents. children. and siblings. are eligible for permission to emigrate. This decree effectively prevents thousands of Jews from ever applying for. much less receiving. visas. In 1986. Jewish emigration from the Soviet Union totaled only 914.', text_b=None, label='no')
+Evaluating:   0%|          | 0/30 [00:00<?, ?it/s]Evaluating:   3%|▎         | 1/30 [00:01<00:34,  1.18s/it]Evaluating:   7%|▋         | 2/30 [00:02<00:30,  1.09s/it]Evaluating:  10%|█         | 3/30 [00:03<00:28,  1.04s/it]Evaluating:  13%|█▎        | 4/30 [00:04<00:26,  1.03s/it]Evaluating:  17%|█▋        | 5/30 [00:05<00:25,  1.01s/it]Evaluating:  20%|██        | 6/30 [00:06<00:24,  1.01s/it]Evaluating:  23%|██▎       | 7/30 [00:07<00:23,  1.02s/it]Evaluating:  27%|██▋       | 8/30 [00:08<00:22,  1.02s/it]Evaluating:  30%|███       | 9/30 [00:09<00:21,  1.01s/it]Evaluating:  33%|███▎      | 10/30 [00:10<00:20,  1.01s/it]Evaluating:  37%|███▋      | 11/30 [00:11<00:19,  1.00s/it]Evaluating:  40%|████      | 12/30 [00:12<00:17,  1.02it/s]Evaluating:  43%|████▎     | 13/30 [00:13<00:16,  1.02it/s]Evaluating:  47%|████▋     | 14/30 [00:14<00:15,  1.01it/s]Evaluating:  50%|█████     | 15/30 [00:15<00:14,  1.01it/s]Evaluating:  53%|█████▎    | 16/30 [00:16<00:13,  1.01it/s]Evaluating:  57%|█████▋    | 17/30 [00:17<00:13,  1.02s/it]Evaluating:  60%|██████    | 18/30 [00:18<00:12,  1.01s/it]Evaluating:  63%|██████▎   | 19/30 [00:19<00:11,  1.01s/it]Evaluating:  67%|██████▋   | 20/30 [00:20<00:10,  1.00s/it]Evaluating:  70%|███████   | 21/30 [00:21<00:08,  1.01it/s]Evaluating:  73%|███████▎  | 22/30 [00:22<00:07,  1.00it/s]Evaluating:  77%|███████▋  | 23/30 [00:23<00:06,  1.00it/s]Evaluating:  80%|████████  | 24/30 [00:24<00:06,  1.02s/it]Evaluating:  83%|████████▎ | 25/30 [00:25<00:05,  1.02s/it]Evaluating:  87%|████████▋ | 26/30 [00:26<00:04,  1.01s/it]Evaluating:  90%|█████████ | 27/30 [00:27<00:02,  1.01it/s]Evaluating:  93%|█████████▎| 28/30 [00:28<00:01,  1.00it/s]Evaluating:  97%|█████████▋| 29/30 [00:29<00:00,  1.01it/s]Evaluating: 100%|██████████| 30/30 [00:30<00:00,  1.01it/s]Evaluating: 100%|██████████| 30/30 [00:30<00:00,  1.01s/it]
+04/20/2026 20:31:35 - INFO - __main__ -   ***** Eval results  *****
+04/20/2026 20:31:35 - INFO - __main__ -     acc = 0.9583333333333334
+04/20/2026 20:31:35 - INFO - __main__ -     f1 = 0.9583333333333334
+Instance weight shape: (240,)
+(240,)
+(240,)
+accuracy 2
+f1 2
+INFO  Summary saved to results/temporal_generalization/roberta-base_s42/summary.tsv
+
+=== Temporal Generalization: macro-F1 ===
+train\test  early     mid       modern  
+----------------------------------------
+early       0.9603    0.8542    0.8000    
+mid         0.8624    0.9722    0.8250    
+modern      0.8148    0.9028    0.9583    
+
+=== Done ===
+---------------------------------------
+Begin Slurm Epilog: Apr-20-2026 20:31:37
+Job ID:        5025855
+User ID:       jvarma3
+Account:       coc
+Job name:      temporal_gen_cpu
+Resources:     cpu=8,mem=32G,node=1
+Rsrc Used:     cput=01:11:20,vmem=0,walltime=00:08:55,mem=1007564K,energy_used=0
+Partition:     coc-cpu
+QOS:           coc-ice
+Nodes:         atl1-1-02-010-7-2
+---------------------------------------
