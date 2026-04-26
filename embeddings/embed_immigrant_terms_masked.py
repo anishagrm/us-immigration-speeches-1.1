@@ -7,7 +7,7 @@ from optparse import OptionParser
 import torch
 import numpy as np
 from tqdm import tqdm
-from transformers import BertModel, BertTokenizer, RobertaModel, RobertaTokenizer
+from transformers import AutoTokenizer, BertModel, BertTokenizer, RobertaModel, RobertaTokenizer
 
 from analysis.identify_immigrant_mentions import create_target_terms_and_replacements
 
@@ -25,8 +25,8 @@ def main():
                       help='Tokenizer name or path (defaults to model): default=%default')
     parser.add_option('--model', type=str, default='bert-base-uncased',
                       help='Model name or path: default=%default')
-    parser.add_option('--device', type=int, default=0,
-                      help='GPU to use: default=%default')
+    parser.add_option('--device', type=str, default='0',
+                      help='GPU index to use, or "cpu": default=%default')
     parser.add_option('--outdir', type=str, default='data/speeches/Congress/contextual-embeddings/bert-base-uncased/',
                       help='Model name or path: default=%default')
     parser.add_option('--mask-farms', action="store_true", default=False,
@@ -48,24 +48,26 @@ def main():
     print("Loading model")
     if model_type == 'bert':
         model_class = BertModel
-        tokenizer_class = BertTokenizer
     elif model_type == 'roberta':
         model_class = RobertaModel
-        tokenizer_class = RobertaTokenizer
     else:
         raise ValueError("Model type not recognized")
 
     # Load pretrained model/tokenizer
     if tokenizer is None:
-        tokenizer = tokenizer_class.from_pretrained(model_name_or_path)
+        tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
     else:
-        tokenizer = tokenizer_class.from_pretrained(tokenizer)
+        tokenizer = AutoTokenizer.from_pretrained(tokenizer)
 
     model = model_class.from_pretrained(model_name_or_path)
 
-    # move the model to the GPU
-    torch.cuda.set_device(device)
-    device = torch.device("cuda", device)
+    # move the model to the GPU (or CPU for local testing)
+    if options.device == 'cpu':
+        device = torch.device('cpu')
+    else:
+        device_num = int(options.device)
+        torch.cuda.set_device(device_num)
+        device = torch.device('cuda', device_num)
     model.to(device)
 
     print("Creating search terms")
@@ -76,7 +78,7 @@ def main():
     search_terms = dict()
     for term in target_terms:
         input_ids = tokenizer.encode(term, add_special_tokens=False)
-        tokens = [tokenizer.ids_to_tokens[i] for i in input_ids]
+        tokens = tokenizer.convert_ids_to_tokens(input_ids)
         search_terms[''.join(tokens)] = term
 
     line_indices = []
@@ -108,7 +110,7 @@ def main():
         input_ids = tokenizer.encode(simplified_text, max_length=512, truncation=True)
 
         # get the tokenized representation from the contextual emebdding model
-        tokens = [tokenizer.ids_to_tokens[i] for i in input_ids]
+        tokens = tokenizer.convert_ids_to_tokens(input_ids)
 
         # rejoin and collapse pieces
         token_string = tokens[0]
@@ -149,7 +151,7 @@ def main():
 
         if len(target_indices) > 0:
 
-            input_ids = tokenizer.encode(masked_tokens, add_special_tokens=False)
+            input_ids = tokenizer.convert_tokens_to_ids(masked_tokens)
             input_ids = torch.tensor([input_ids])
             input_ids_on_device = input_ids.to(device)
 

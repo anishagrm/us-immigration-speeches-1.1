@@ -8,9 +8,11 @@ from optparse import OptionParser
 import torch
 import numpy as np
 from tqdm import tqdm
-from transformers import BertModel, BertTokenizer, RobertaModel, RobertaTokenizer, BertForMaskedLM, RobertaForMaskedLM
-#from transformers.models.bert.modeling_bert import BertOnlyMLMHead
-from transformers.modeling_bert import BertOnlyMLMHead
+from transformers import AutoTokenizer, BertModel, BertTokenizer, RobertaModel, RobertaTokenizer, BertForMaskedLM, RobertaForMaskedLM
+try:
+    from transformers.models.bert.modeling_bert import BertOnlyMLMHead
+except ImportError:
+    from transformers.modeling_bert import BertOnlyMLMHead
 from scipy.special import softmax
 
 from analysis.metaphor_terms import get_metaphor_terms
@@ -42,7 +44,7 @@ def main():
     (options, args) = parser.parse_args()
 
     infile = options.infile
-    random_file = options.random_file    
+    random_file = options.random_file
     tokenizer = options.tokenizer
     model_type = options.model_type
     model_name_or_path = options.model
@@ -56,20 +58,21 @@ def main():
         combined.extend(terms)
     metaphor_terms['combined'] = combined
 
-    with open(random_file) as f:
-        random_nouns = f.readlines()
-    metaphor_terms['random'] = [t.strip() for t in random_nouns]
-    metaphor_terms['random_xhuman'] = [t for t in metaphor_terms['random'] if t != 'humans']
+    if random_file and os.path.exists(random_file):
+        with open(random_file) as f:
+            random_nouns = f.readlines()
+        metaphor_terms['random'] = [t.strip() for t in random_nouns]
+        metaphor_terms['random_xhuman'] = [t for t in metaphor_terms['random'] if t != 'humans']
+    else:
+        print(f"Warning: random nouns file not found ({random_file}), skipping random baseline")
 
     print("Loading model")
     if model_type == 'bert':
         model_class = BertModel
-        tokenizer_class = BertTokenizer
         lm_model_class = BertForMaskedLM
         lm_head_class = BertOnlyMLMHead
     elif model_type == 'roberta':
         model_class = RobertaModel
-        tokenizer_class = RobertaTokenizer
         lm_model_class = RobertaForMaskedLM
         raise NotImplementedError("Need to get the lm_head_class for Roberta")
     else:
@@ -77,9 +80,9 @@ def main():
 
     # Load pretrained model/tokenizer
     if tokenizer is None:
-        tokenizer = tokenizer_class.from_pretrained(model_name_or_path)
+        tokenizer = AutoTokenizer.from_pretrained(model_name_or_path)
     else:
-        tokenizer = tokenizer_class.from_pretrained(tokenizer)
+        tokenizer = AutoTokenizer.from_pretrained(tokenizer)
 
     #model = model_class.from_pretrained(model_name_or_path)
     lm = lm_model_class.from_pretrained(model_name_or_path)

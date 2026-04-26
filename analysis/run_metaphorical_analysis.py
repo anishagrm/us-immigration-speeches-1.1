@@ -312,11 +312,12 @@ def main():
             mexican_log_probs.extend(log_probs_by_congress_mexican[metaphor][congress_str])
             hispanic_log_probs.extend(log_probs_by_congress_hispanic[metaphor][congress_str])
             european_log_probs.extend(log_probs_by_congress_european[metaphor][congress_str])
-            dem_log_control_probs.extend(log_probs_by_congress_dem['random'][congress_str])
-            rep_log_control_probs.extend(log_probs_by_congress_rep['random'][congress_str])
-            mexican_log_control_probs.extend(log_probs_by_congress_mexican['random'][congress_str])
-            hispanic_log_control_probs.extend(log_probs_by_congress_hispanic['random'][congress_str])
-            european_log_control_probs.extend(log_probs_by_congress_european['random'][congress_str])
+            if 'random' in log_probs_by_congress_dem:
+                dem_log_control_probs.extend(log_probs_by_congress_dem['random'][congress_str])
+                rep_log_control_probs.extend(log_probs_by_congress_rep['random'][congress_str])
+                mexican_log_control_probs.extend(log_probs_by_congress_mexican['random'][congress_str])
+                hispanic_log_control_probs.extend(log_probs_by_congress_hispanic['random'][congress_str])
+                european_log_control_probs.extend(log_probs_by_congress_european['random'][congress_str])
 
         party_diff, party_diff_pvalue = do_permutation_test(np.exp(rep_log_probs), np.exp(dem_log_probs), samples)
         group_diff, group_diff_pvalue = do_permutation_test(np.exp(mexican_log_probs), np.exp(european_log_probs), samples)

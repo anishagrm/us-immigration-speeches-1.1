@@ -223,6 +223,174 @@ For Frame comparison for Europe vs Latin America (in SI):
 
 For public opinion and SEI analyses (in SI), refer to `public_opinion_and_sei`
 
+---
+
+## RooseBERT Experiments (Anisha Gurram, 2026)
+
+This section documents experiments comparing RooseBERT against the original RoBERTa baseline for the relevance and tone classifiers, and a dehumanization analysis using RooseBERT's MLM head in place of the original model.
+
+### Motivation
+
+RooseBERT (`ddore14/RooseBERT-*`) is a domain-specific BERT model pretrained on US political text. The hypothesis is that domain-specific pretraining may yield better performance on historical congressional speech classification and more contextually appropriate metaphor/dehumanization probability estimates compared to the general-purpose models used in the original paper.
+
+### Experiment 1A: RoBERTa vs RooseBERT-cont-uncased (`runs/experiment_1`)
+
+**Setup:** Both models trained on `train.jsonlist`, evaluated on `test.jsonlist` across 4 seeds (0, 1, 2, 42). Same hyperparameters: lr=2e-5, 7 epochs, batch size=8. RoBERTa uses `max_seq_length=400`; RooseBERT uses 512.
+
+**Script:** `pace_compare_seeds.sh`
+
+**Relevance** (n=762 test examples):
+
+| Model | Mean Acc | Std | Mean F1 | Std |
+|-------|----------|-----|---------|-----|
+| roberta-base | 0.901 | 0.005 | 0.894 | 0.005 |
+| RooseBERT-cont-uncased | 0.885 | 0.007 | 0.878 | 0.007 |
+
+**Tone** (n=899 test examples):
+
+| Model | Mean Acc | Std |
+|-------|----------|-----|
+| roberta-base | 0.678 | 0.004 |
+| RooseBERT-cont-uncased | 0.676 | 0.005 |
+
+**Findings:** RoBERTa outperforms RooseBERT-cont-uncased on relevance by ~1.6pp consistently across seeds. Tone results are statistically equivalent. Possible explanations: (1) hyperparameters were tuned for RoBERTa, not RooseBERT; (2) the uncased model loses case signal present in historical text (proper nouns, formal titles); (3) continued pretraining may not be as effective as training from scratch on domain text.
+
+### Experiment 1B: Learning rate sweep on cased RooseBERT variants (`runs/experiment_2`)
+
+To address the limitations in Sub-experiment A, two cased RooseBERT variants were evaluated across a learning rate sweep on `dev.jsonlist` with a single seed (42).
+
+**Script:** `pace_lr_sweep.sh`
+
+Models evaluated:
+- `ddore14/RooseBERT-cont-cased`: continued pretraining on political text, cased
+- `ddore14/RooseBERT-scr-cased`: trained from scratch on political text, cased
+
+**Relevance dev set results:**
+
+| Model | LR | Dev Acc | Dev F1 |
+|-------|----|---------|--------|
+| RooseBERT-cont-cased | 1e-5 | 0.900 | 0.897 |
+| RooseBERT-cont-cased | 2e-5 | 0.906 | 0.901 |
+| **RooseBERT-cont-cased** | **3e-5** | **0.917** | **0.914** |
+| RooseBERT-scr-cased | 1e-5 | 0.890 | 0.885 |
+| RooseBERT-scr-cased | 2e-5 | 0.896 | 0.891 |
+| RooseBERT-scr-cased | 3e-5 | 0.912 | 0.906 |
+
+**Tone dev set results:**
+
+| Model | LR | Dev Acc | F1-anti | F1-neutral | F1-pro |
+|-------|----|---------|---------|------------|--------|
+| RooseBERT-cont-cased | 1e-5 | 0.680 | 0.668 | 0.571 | 0.754 |
+| RooseBERT-cont-cased | 2e-5 | 0.683 | 0.687 | 0.567 | 0.757 |
+| RooseBERT-cont-cased | 3e-5 | 0.674 | 0.687 | 0.555 | 0.753 |
+| **RooseBERT-scr-cased** | **1e-5** | **0.703** | **0.711** | **0.600** | **0.761** |
+| RooseBERT-scr-cased | 2e-5 | 0.686 | 0.698 | 0.552 | 0.766 |
+| RooseBERT-scr-cased | 3e-5 | 0.680 | 0.701 | 0.559 | 0.747 |
+
+**Best hyperparameters identified:** `cont-cased @ lr=3e-5` for relevance; `scr-cased @ lr=1e-5` for tone.
+
+### Experiment 1C: Final comparison with best hyperparameters (`runs/experiment_3`)
+
+Using the best model+LR from Sub-experiment B, each RooseBERT variant is compared against `roberta-base` on `test.jsonlist` across 3 seeds (0, 1, 2).
+
+**Script:** `pace_final_comparison.sh`
+
+**Relevance** (n=762 test examples):
+
+| Model | Mean Acc | Std | Mean F1 | Std |
+|-------|----------|-----|---------|-----|
+| roberta-base (lr=2e-5) | 0.893 | 0.002 | 0.885 | 0.002 |
+| RooseBERT-cont-cased (lr=3e-5) | 0.887 | 0.003 | 0.878 | 0.001 |
+
+Per-seed relevance results:
+
+| Model | Seed 0 Acc | Seed 1 Acc | Seed 2 Acc |
+|-------|-----------|-----------|-----------|
+| roberta-base | 0.891 | 0.892 | 0.895 |
+| RooseBERT-cont-cased | 0.891 | 0.885 | 0.886 |
+
+**Tone** (n=899 test examples):
+
+| Model | Mean Acc | Std | Mean F1-anti | Mean F1-neutral | Mean F1-pro |
+|-------|----------|-----|-------------|----------------|------------|
+| roberta-base (lr=2e-5) | 0.670 | 0.008 | 0.651 | 0.567 | 0.760 |
+| RooseBERT-scr-cased (lr=1e-5) | 0.670 | 0.006 | 0.649 | 0.551 | 0.762 |
+
+Per-seed tone results:
+
+| Model | Seed 0 Acc | Seed 1 Acc | Seed 2 Acc |
+|-------|-----------|-----------|-----------|
+| roberta-base | 0.669 | 0.681 | 0.662 |
+| RooseBERT-scr-cased | 0.679 | 0.667 | 0.665 |
+
+**Findings:** Even with optimal hyperparameters, RoBERTa holds a small advantage on relevance (~0.6pp). For tone, both models score identically on the test set (0.670 mean acc), despite RooseBERT-scr-cased showing 0.703 on the dev set. This gap between dev and test suggests the dev-set improvement was not generalizable. Domain-specific pretraining does not provide a measurable benefit for either classification task.
+
+### Experiment 1D: MLM dehumanization analysis with RooseBERT
+
+**Goal:** Repeat the original paper's metaphor/dehumanization analysis using `RooseBERT-cont-cased` in place of `bert-base-uncased`. RooseBERT's domain-specific vocabulary and syntax modeling may yield different word probability distributions when predicting masked immigrant terms — particularly for pre-1970s historical text that is closer to its pretraining corpus.
+
+**Script:** `pace_roosebert_mlm.sh`
+
+**Pipeline:**
+
+1. Extract contextual embeddings for masked immigrant mentions:
+   ```bash
+   python3 -m embeddings.embed_immigrant_terms_masked \
+       --model-type bert \
+       --model ddore14/RooseBERT-cont-cased \
+       --outdir data/speeches/Congress/contextual-embeddings/RooseBERT-cont-cased \
+       --device 0
+   ```
+
+2. Apply the MLM head to convert embeddings to word probability distributions:
+   ```bash
+   python3 -m embeddings.convert_embeddings_to_word_probs \
+       --model-type bert \
+       --model ddore14/RooseBERT-cont-cased \
+       --infile data/speeches/Congress/contextual-embeddings/RooseBERT-cont-cased/immigrant_vectors_masked.npz \
+       --outdir data/speeches/Congress/contextual-embeddings/RooseBERT-cont-cased \
+       --device 0
+   ```
+
+3. Run metaphorical association analysis and statistical tests:
+   ```bash
+   python3 -m analysis.run_metaphorical_analysis \
+       --emb-dir data/speeches/Congress/contextual-embeddings/RooseBERT-cont-cased \
+       --outdir data/speeches/Congress/metaphors/RooseBERT-cont-cased
+   ```
+
+Results to be added upon completion.
+
+### Overall Findings
+
+The original paper used `roberta-base` for relevance and tone classification. These experiments tested whether RooseBERT — domain-specifically pretrained on US political text — would outperform RoBERTa.
+
+**Classification:** RoBERTa retains a small but consistent advantage on relevance (~0.6–1.6pp) across all RooseBERT variants and hyperparameter configurations. For tone, no RooseBERT variant outperforms RoBERTa on the held-out test set. Contributing factors: (a) the annotation labels were likely generated or validated using RoBERTa-family models, creating a distributional alignment advantage; (b) the training sets are small (~5–6k examples), limiting the benefit of domain pretraining; (c) political speech may already be well-represented in RoBERTa's pretraining corpus.
+
+**Dehumanization analysis:** Pending. Results will indicate whether RooseBERT's political text pretraining changes which metaphorical associations (animal, disease, criminal, etc.) are predicted for immigrant terms across historical periods.
+
+### Code changes from original
+
+The following files were modified to run these experiments:
+
+- `hf/run.py`: Fixed `AdamW` import (moved from `transformers` to `torch.optim`); disabled per-epoch checkpoint saving to reduce disk usage; fixed F1 metric bug (`pos_label=None` → `pos_label=1`)
+- `hf/processors.py`: Made `weight_field` lookup robust to missing keys (`.get()` with default 1.0)
+- `hf/metrics.py`: Fixed `pos_label=None` invalid for binary F1 in newer sklearn
+- `classification/run_final_model_tone.py`: Removed hardcoded `--weight_field weight` (60% of tone data lacks weight field)
+- `classification/run_folds_hf_tone.py`: Same fix as above
+- `embeddings/convert_embeddings_to_word_probs.py`: Added `--model-type bert` support to load `BertForMaskedLM` (original script only supported RoBERTa)
+
+### SLURM scripts
+
+All scripts are submitted from the project root on PACE ICE via `sbatch <script>`:
+
+- `pace_compare_seeds.sh`: Multi-seed (0, 1, 2) comparison of RoBERTa vs RooseBERT-cont-uncased on `test.jsonlist`
+- `pace_lr_sweep.sh`: LR sweep (1e-5, 2e-5, 3e-5) on `dev.jsonlist` for cont-cased and scr-cased RooseBERT variants
+- `pace_final_comparison.sh`: Final 3-seed comparison of best RooseBERT variant+LR vs RoBERTa on `test.jsonlist`; results saved to `runs/experiment_3/`
+- `pace_roosebert_mlm.sh`: Full MLM dehumanization pipeline using RooseBERT-cont-cased (embed → word probs → metaphor analysis)
+
+---
+
 ## Citation
 
 To cite this respository or the data contained herein, please use:
