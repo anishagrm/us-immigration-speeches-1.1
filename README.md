@@ -15,7 +15,7 @@ ln -s ~/scratch/data ~/personal/us-immigration-speeches-1.1/data
 module load anaconda3
 conda create -n llama python=3.11 -y
 
-# PACE home dir has a small quota — move the env to scratch and symlink it
+# PACE home dir has a small quota - move the env to scratch and symlink it
 mkdir -p $HOME/scratch/envs
 mv $HOME/.conda/envs/llama $HOME/scratch/envs/llama
 ln -s $HOME/scratch/envs/llama $HOME/.conda/envs/llama
@@ -31,8 +31,8 @@ $HOME/scratch/envs/llama/bin/pip install torch --index-url https://download.pyto
 $HOME/scratch/envs/llama/bin/python -c "import torch; print(torch.__version__); print(torch.version.cuda)"
 # Should print: 2.x.x+cu124 and 12.4
 ```
-Note: scratch storage persists across jobs but is wiped at semester end — back up results externally.
-Note: HuggingFace cache also goes to scratch to avoid filling home dir — set HF_HOME=$HOME/scratch/hf_cache before downloading models. The llama-runs/run1/pace_train_llama_tone.sh and llama-runs/run1/pace_train_llama_relevance.sh scripts do this automatically.
+Note: scratch storage persists across jobs but is wiped at semester end - back up results externally.
+Note: HuggingFace cache also goes to scratch to avoid filling home dir - set HF_HOME=$HOME/scratch/hf_cache before downloading models. The llama-runs/run1/pace_train_llama_tone.sh and llama-runs/run1/pace_train_llama_relevance.sh scripts do this automatically.
 Note: if home dir fills up, run `rm -rf $HOME/.cache/huggingface` to clear cached model weights from home.
 
 # HuggingFace token setup (required for gated models e.g. Llama):
@@ -79,9 +79,9 @@ Experiment 1's training script is in pace_train.sh. run the training via sbatch 
 
 # Experiment 2: Fine-tuned Llama (QLoRA)
 
-Fine-tunes Llama-3.2-1B on the annotated corpus using QLoRA (4-bit NF4 + LoRA rank-16/alpha-16 on q_proj, v_proj). Unlike the encoder-based experiments, Llama receives the annotator guidelines verbatim in its prompt and classifies by comparing log-probabilities over label tokens — no classification head needed.
+Fine-tunes Llama-3.2-1B on the annotated corpus using QLoRA (4-bit NF4 + LoRA rank-16/alpha-16 on q_proj, v_proj). Unlike the encoder-based experiments, Llama receives the annotator guidelines verbatim in its prompt and classifies by comparing log-probabilities over label tokens, no classification head needed.
 
-Two tasks are supported: **tone** (anti / neutral / pro) and **relevance** (yes / no).
+Two tasks: **tone** (anti / neutral / pro) and **relevance** (yes / no).
 
 ### Environment setup
 
@@ -102,13 +102,13 @@ Each directory needs `all.jsonlist` (train), `dev.jsonlist`, and `test.jsonlist`
 
 ### Bugs fixed (run2)
 
-Run1 produced loss=0 throughout training due to two bugs in the dataset construction, both in `ToneDataset` / `RelevanceDataset`:
+Run1 had loss=0 for all steps due to two bugs in `ToneDataset` / `RelevanceDataset`:
 
-1. **Label token truncated by long speeches.** The full sequence (guidelines + speech + label) was tokenized with `truncation=True, max_length=512`, which cuts from the right — silently removing the label token for any speech long enough to fill the context. Fix: pre-compute the token budget for the speech text (`max_length - template_tokens - 1`) and truncate only the speech, guaranteeing the label token always survives.
+1. **Label token truncated.** The full sequence (guidelines + speech + label) was tokenized with `truncation=True, max_length=512`, which cuts from the right and removes the label token for long speeches. Fix: compute how many tokens the template uses, then truncate only the speech text to fit, so the label always survives.
 
-2. **Tokenization boundary merge.** Even after fix #1, loss was still 0. The trailing `"Tone: "` produces a standalone space token when tokenized alone, but when the label is appended (`"Tone: negative"`), the tokenizer merges the space into the label token (`"▁negative"`). This made `len(full_ids) == len(prompt_ids)`, so `labels` was all `-100`. Fix: instead of using `len(prompt_ids)` as the boundary, find the first position where `full_ids` and `prompt_ids` diverge — this correctly handles both clean appends and boundary merges.
+2. **Tokenization boundary merge.** Even after fix #1, loss was still 0. `"Tone: "` tokenizes with a trailing space token when encoded alone, but `"Tone: negative"` merges the space into `"▁negative"`, so `len(full_ids) == len(prompt_ids)` and `labels` ends up all `-100`. Fix: find the first position where `full_ids` and `prompt_ids` diverge instead of assuming `len(prompt_ids)` is the boundary.
 
-A `ZeroLossCallback` was also added to both scripts: if loss stays exactly `0.0` for 5 consecutive logging steps, training aborts immediately with an error rather than wasting GPU hours.
+A `ZeroLossCallback` was also added: if loss stays at `0.0` for 5 consecutive logging steps, training aborts with an error.
 
 **Use run2 scripts, not run1.**
 
@@ -165,19 +165,20 @@ python -m classification.run_llama_qlora \
 ### Output
 
 Predictions and metrics are written to the output dir:
-- `preds_dev.tsv` / `preds_test.tsv` — predicted label indices and class probabilities
-- `eval_results_dev.txt` / `eval_results_test.txt` — accuracy, per-class F1, macro-F1
+- `preds_dev.tsv` / `preds_test.tsv` - predicted label indices and class probabilities
+- `eval_results_dev.txt` / `eval_results_test.txt` - accuracy, per-class F1, macro-F1
+
 
 ### Results
 
-#### Run1 (broken — loss=0 throughout)
+#### Run1 (broken - loss=0 throughout)
 
 | Task | Macro-F1 (dev) | Macro-F1 (test) |
 |------|---------------|-----------------|
 | Tone | 0.32 | 0.32 |
 | Relevance | 0.50 | 0.49 |
 
-Both at random-chance level (3-class baseline = 0.33, binary baseline = 0.50). Training loss was 0 for all steps due to the bugs described above — the model never learned anything.
+Both at random-chance level (3-class baseline = 0.33, binary baseline = 0.50). Training loss was 0 the whole time due to the bugs above.
 
 #### Run2 (bugs fixed)
 
@@ -191,14 +192,12 @@ Both at random-chance level (3-class baseline = 0.33, binary baseline = 0.50). T
 | Relevance | F1-yes | 0.4028 | 0.3563 |
 | Relevance | Accuracy | 0.5446 | 0.5210 |
 
-**Comparison to run1:** Tone macro-F1 improved from 0.32 → 0.40 (+8 points), confirming the model is now actually learning. Relevance macro-F1 improved marginally (0.49 → 0.49) at the macro level but F1-yes improved (0.35 → 0.36), again showing real learning.
-
-**Interpretation:** Tone results are meaningfully above chance and show the model has learned to distinguish anti/neutral/pro framing. Neutral is the easiest class (F1=0.45), which makes sense as it has the most distinct surface features (procedural language, statistics). Pro and anti are harder to separate. Relevance results are weaker — the model is still closer to the binary baseline (0.50), suggesting the 1B model struggles with the relevance boundary more than tone. Increasing to a larger model or more epochs would likely help both tasks.
+Tone macro-F1 went from 0.32 to 0.40 (+8 points), which is above chance and shows the model is actually learning. Neutral is the easiest class (F1=0.45), probably because procedural/statistical language is pretty distinct. Pro and anti are harder to separate. Relevance is weaker and still close to the binary baseline; a larger model or more epochs would likely help.
 
 ### Notes
 
 - 4-bit quantization requires CUDA; MPS/CPU automatically fall back to fp32
-- Classification is done via log-probability comparison over label tokens at the last prompt position — no additional classification head
+- Classification is done via log-probability comparison over label tokens at the last prompt position - no additional classification head
 - Tone label tokens: `negative` (anti), `neutral`, `positive` (pro)
 - Relevance label tokens: `no`, `yes`
 
@@ -207,14 +206,14 @@ Both at random-chance level (3-class baseline = 0.33, binary baseline = 0.50). T
 
 ### What the model does
 
-This is encoder-only fine-tuning — no prompt, no generation. RoBERTa-base is fine-tuned for binary classification: given a raw congressional speech segment, predict `yes` (relevant to immigration) or `no` (not relevant). A linear classification head is added on top of RoBERTa's `[CLS]` token representation and trained jointly with the encoder weights via cross-entropy loss on labeled examples. The model sees only the speech text — no task description or instructions.
+Encoder-only fine-tuning, no prompt or generation. RoBERTa-base gets a linear classification head on top of the `[CLS]` token and is trained end-to-end on labeled speech segments to predict `yes` (immigration-relevant) or `no`. The model only sees raw speech text.
 
-Three separate models are trained, one per historical era:
-- **Early** (~1870s–1920s): Reconstruction, Chinese Exclusion Act, first great immigration wave
-- **Mid** (~1930s–1970s): New Deal through Cold War, national quota system debates
-- **Modern** (~1980s–2010s): Reagan-era reform, post-9/11, contemporary border policy
+Three separate models are trained, one per era:
+- **Early** (~1870s-1920s): Reconstruction, Chinese Exclusion Act, first immigration wave
+- **Mid** (~1930s-1970s): New Deal through Cold War, national quota debates
+- **Modern** (~1980s-2010s): Reagan-era reform, post-9/11, contemporary border policy
 
-Each model learns era-specific surface features that correlate with immigration relevance (e.g. the modern model picks up on "undocumented", "DACA", "border"; the early model on "Chinese", "alien", "naturalization"). The experiment then tests whether those features transfer across time by evaluating all three models on all three test sets — producing a 3×3 grid. Cross-era drops reveal how much immigration rhetoric has shifted: a modern model that learned contemporary vocabulary struggles to recognize an 1880s speech about the Chinese Exclusion Act as immigration-relevant, even though it clearly is.
+Each model learns the vocabulary that signals immigration relevance in its era (e.g. modern: "undocumented", "DACA", "border"; early: "Chinese", "alien", "naturalization"). The 3x3 grid then shows how well each model transfers to the other eras.
 
 **Prerequisite:** per-era splits must exist under `data/annotations/relevance_and_tone/{era}/relevance/splits/basic/`. Run the split generation step from "Prep the data" section above if needed.
 
@@ -273,9 +272,4 @@ Macro-F1 scores for all 9 train-era × test-era combinations on the relevance ta
 | **Mid**      | 0.8624 | 0.9722 | 0.8250 |
 | **Modern**   | 0.8148 | 0.9028 | 0.9583 |
 
-**Diagonal** = within-era (in-distribution) performance — all ≥ 0.96, confirming each era is learnable.
-
-**Off-diagonal** = cross-era transfer. Key observations:
-- Early → Modern and Modern → Early show the largest drops (~0.80 and ~0.81), consistent with the greatest temporal distance.
-- Mid transfers reasonably well in both directions (0.86–0.90), acting as a bridge era.
-- Overall the drops are modest (~10–15 F1 points), suggesting immigration rhetoric shares substantial cross-era signal — but era-specific features still matter.
+Diagonal = within-era performance, all >= 0.96. Off-diagonal = cross-era transfer. Early/Modern is the hardest pair (~0.80 in both directions), which makes sense given the largest time gap. Mid transfers reasonably well in both directions (0.86-0.90). Overall drops of 10-15 F1 points suggest there is a stable cross-era signal but era-specific vocabulary still matters.

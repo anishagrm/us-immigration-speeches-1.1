@@ -1,11 +1,7 @@
 #!/bin/bash
-# Local smoke test: verifies Llama QLoRA training loss is non-zero before
-# submitting to PACE. Runs ~10 steps on a 40-example sample, MPS/CPU only.
-#
-# Usage (from repo root):
-#   bash smoke_test_llama_local.sh
-#
-# Exit 0 = PASS (safe to submit), Exit 1 = FAIL (do not submit)
+# Verifies training loss is non-zero on a small sample before submitting to PACE.
+# Usage: bash smoke_test_llama_local.sh
+# Exit 0 = pass, exit 1 = fail.
 
 set -euo pipefail
 
@@ -15,8 +11,7 @@ MAX_SEQ=256
 TMPDIR=$(mktemp -d)
 trap "rm -rf $TMPDIR" EXIT
 
-echo "=== Llama QLoRA Local Smoke Test ==="
-echo "Samples: $N_SAMPLES | Max seq len: $MAX_SEQ"
+echo "=== Llama QLoRA Smoke Test ==="
 echo ""
 
 PASS=true
@@ -29,15 +24,14 @@ run_test() {
     echo "--- $task ---"
 
     if [ ! -f "$train_src" ]; then
-        echo "SKIP: training data not found at $train_src"
+        echo "SKIP: $train_src not found"
         return
     fi
 
-    # Sample N random lines from the training data
     local tmpbase="$TMPDIR/$task"
     mkdir -p "$tmpbase"
     $PYTHON -c "
-import json, random, sys
+import random, sys
 lines = [l for l in open('$train_src') if l.strip()]
 random.seed(42)
 for l in random.sample(lines, min($N_SAMPLES, len(lines))):
@@ -45,8 +39,6 @@ for l in random.sample(lines, min($N_SAMPLES, len(lines))):
 " > "$tmpbase/all.jsonlist"
 
     local log="$TMPDIR/${task}.log"
-
-    # Run training (4-bit auto-disabled on MPS/CPU)
     $PYTHON -m "$script" \
         --model meta-llama/Llama-3.2-1B \
         --basedir "$tmpbase/" \
@@ -64,21 +56,16 @@ for l in random.sample(lines, min($N_SAMPLES, len(lines))):
         --seed 42 \
         2>&1 | tee "$log"
 
-    # Parse all logged loss values and the final train_loss
     local result
     result=$($PYTHON -c "
-import re, sys
-
+import re
 losses = []
 for line in open('$log'):
-    # per-step: {'loss': '0.1234', ...}
     for m in re.finditer(r\"'loss':\\s*'([0-9.e+-]+)'\", line):
         losses.append(float(m.group(1)))
-    # final summary: 'train_loss': '0.1234'
     m = re.search(r\"'train_loss':\\s*'([0-9.e+-]+)'\", line)
     if m:
         losses.append(float(m.group(1)))
-
 if not losses:
     print('NO_LOSS_LOGGED')
 elif all(v == 0.0 for v in losses):
@@ -90,9 +77,9 @@ else:
 ")
 
     if [[ "$result" == OK* ]]; then
-        echo "PASS: $task — $result"
+        echo "PASS: $task -- $result"
     else
-        echo "FAIL: $task — $result"
+        echo "FAIL: $task -- $result"
         PASS=false
     fi
     echo ""
@@ -107,9 +94,9 @@ run_test "relevance" \
     "data/speeches/Congress/relevance/splits/basic/all.jsonlist"
 
 if [ "$PASS" = true ]; then
-    echo "=== PASSED — safe to submit to PACE ==="
+    echo "=== PASSED ==="
     exit 0
 else
-    echo "=== FAILED — fix the bug before submitting ==="
+    echo "=== FAILED ==="
     exit 1
 fi

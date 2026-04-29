@@ -1,39 +1,43 @@
 #!/bin/bash
-# Local fine-tuning for both Llama QLoRA tasks on MPS (Apple Silicon).
-# Estimated runtime: ~60 min tone + ~2 hr relevance = ~3 hr total.
-#
-# Differences from PACE run:
-#   - max_seq_length=256 instead of 512 (faster on MPS)
-#   - fp32 (4-bit quantization not supported on MPS)
-#   - output-prefix: llama_qlora_local (separate from PACE results)
-#
-# Usage (from repo root, with llama conda env active):
-#   bash local_train_llama.sh
+# Local fine-tuning on MPS (Apple Silicon).
+# 2 epochs, 50% of training data, max_seq_length=256.
+# Expected: ~20 min tone + ~40 min relevance.
+# Usage: bash local_train_llama.sh
 
 set -euo pipefail
 
 PYTHON=$(which python)
+TMPDIR=$(mktemp -d)
+trap "rm -rf $TMPDIR" EXIT
 
 echo "=== Local Llama QLoRA Fine-tuning ==="
-echo "Device: MPS (Apple Silicon)"
-echo "Estimated time: ~60 min total"
-echo ""
-
-# ── Tone classifier ───────────────────────────────────────────────────────────
-echo "--- [1/2] Tone classifier (anti / neutral / pro) ---"
-echo "Expected: ~60 min"
 date
 
+$PYTHON -c "
+import random
+random.seed(42)
+for src, dst in [
+    ('data/speeches/Congress/tone/splits/label-weights/all.jsonlist', '$TMPDIR/tone_train.jsonlist'),
+    ('data/speeches/Congress/relevance/splits/basic/all.jsonlist', '$TMPDIR/rel_train.jsonlist'),
+]:
+    lines = [l for l in open(src) if l.strip()]
+    sample = random.sample(lines, len(lines) // 2)
+    open(dst, 'w').writelines(sample)
+    print(f'{src}: using {len(sample)}/{len(lines)} examples')
+"
+
+echo ""
+echo "--- [1/2] tone ---"
 $PYTHON -m classification.run_llama_qlora \
     --model meta-llama/Llama-3.2-1B \
     --basedir data/speeches/Congress/tone/splits/label-weights/ \
-    --train-file all.jsonlist \
+    --train-file $TMPDIR/tone_train.jsonlist \
     --dev-file dev.jsonlist \
     --test-file test.jsonlist \
     --outdir llama-runs/run2/tone \
     --do-train \
     --do-eval \
-    --n-epochs 3 \
+    --n-epochs 2 \
     --lr 2e-4 \
     --batch-size 4 \
     --grad-accum 2 \
@@ -45,22 +49,17 @@ $PYTHON -m classification.run_llama_qlora \
     --seed 42
 
 echo ""
-
-# ── Relevance classifier ──────────────────────────────────────────────────────
-echo "--- [2/2] Relevance classifier (yes / no) ---"
-echo "Expected: ~2 hr"
-date
-
+echo "--- [2/2] relevance ---"
 $PYTHON -m classification.run_llama_qlora_relevance \
     --model meta-llama/Llama-3.2-1B \
     --basedir data/speeches/Congress/relevance/splits/basic/ \
-    --train-file all.jsonlist \
+    --train-file $TMPDIR/rel_train.jsonlist \
     --dev-file dev.jsonlist \
     --test-file test.jsonlist \
     --outdir llama-runs/run2/relevance \
     --do-train \
     --do-eval \
-    --n-epochs 3 \
+    --n-epochs 2 \
     --lr 2e-4 \
     --batch-size 4 \
     --grad-accum 2 \

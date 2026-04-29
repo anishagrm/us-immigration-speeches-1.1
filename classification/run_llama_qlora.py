@@ -148,20 +148,11 @@ class ZeroLossCallback(TrainerCallback):
 
 
 class ToneDataset(Dataset):
-    """
-    Tokenises speech segments with the annotator-guideline prompt for SFT.
-    The loss is computed only on the label token; all prompt tokens are masked
-    with -100 in the labels tensor.
-
-    Speech text is truncated to a computed budget so the label token at the end
-    always survives — truncating the full sequence from the right would cut the
-    label off first for long inputs.
-    """
-
     def __init__(self, items, tokenizer, max_length: int = 512):
-        # Tokens consumed by the fixed template (guidelines + structural wrapper)
+        # Compute how many tokens the speech text can use, reserving space
+        # for the fixed template and the label token at the end.
         template_len = len(tokenizer(build_prompt("", label=None))["input_ids"])
-        text_budget = max_length - template_len - 1  # -1 for the label token
+        text_budget = max_length - template_len - 1
         if text_budget <= 0:
             raise ValueError(
                 f"max_length={max_length} is too small for the guidelines alone "
@@ -173,7 +164,6 @@ class ToneDataset(Dataset):
             text = item["text"]
             label = item["label"]
 
-            # Truncate only the speech text; label token is always preserved
             text_ids = tokenizer(text, add_special_tokens=False)["input_ids"][:text_budget]
             truncated_text = tokenizer.decode(text_ids, skip_special_tokens=True)
 
@@ -184,10 +174,9 @@ class ToneDataset(Dataset):
             full_ids = full_enc["input_ids"]
             prompt_ids = tokenizer(prompt_only)["input_ids"]
 
-            # Find where full_ids and prompt_ids first diverge. This handles
-            # both clean appends (label adds new tokens) and tokenization
-            # boundary merges (trailing space merges into label token, making
-            # len(full_ids) == len(prompt_ids) but the last token differs).
+            # Find where the two sequences first diverge. Handles the case where
+            # the trailing space in "Tone: " merges with the label token, making
+            # len(full_ids) == len(prompt_ids) with a different final token.
             min_len = min(len(full_ids), len(prompt_ids))
             prompt_len = min_len
             for i in range(min_len):
@@ -196,7 +185,7 @@ class ToneDataset(Dataset):
                     break
 
             if prompt_len >= len(full_ids):
-                continue  # label not recoverable from this example
+                continue
 
             labels = [-100] * prompt_len + full_ids[prompt_len:]
 
