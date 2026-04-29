@@ -121,3 +121,6 @@ data/
 *.npz
 *.bin
 checkpoint-*/
+
+runs/*
+results/

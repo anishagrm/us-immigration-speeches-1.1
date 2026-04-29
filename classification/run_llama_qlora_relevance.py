@@ -39,6 +39,7 @@ from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
     Trainer,
+    TrainerCallback,
     TrainingArguments,
 )
 
@@ -94,27 +95,71 @@ def load_jsonlist(path: str):
     return items
 
 
+class ZeroLossCallback(TrainerCallback):
+    """Abort training if loss stays exactly 0 — indicates label tokens are being truncated."""
+
+    def __init__(self, check_after_steps: int = 5):
+        self.check_after_steps = check_after_steps
+        self._losses = []
+
+    def on_log(self, args, state, control, logs=None, **kwargs):
+        if not logs or "loss" not in logs:
+            return
+        self._losses.append(float(logs["loss"]))
+        if len(self._losses) >= self.check_after_steps:
+            recent = self._losses[-self.check_after_steps:]
+            if all(l == 0.0 for l in recent):
+                logger.error(
+                    f"SMOKE TEST FAILED: loss has been 0.0 for {self.check_after_steps} "
+                    f"consecutive logging steps — label tokens are likely truncated. Aborting."
+                )
+                control.should_training_stop = True
+
+
 class RelevanceDataset(Dataset):
     def __init__(self, items, tokenizer, max_length: int = 512):
+        # Tokens consumed by the fixed template (guidelines + structural wrapper)
+        template_len = len(tokenizer(build_prompt("", label=None))["input_ids"])
+        text_budget = max_length - template_len - 1  # -1 for the label token
+        if text_budget <= 0:
+            raise ValueError(
+                f"max_length={max_length} is too small for the guidelines alone "
+                f"({template_len} tokens). Increase --max-seq-length."
+            )
+
         self.examples = []
         for item in items:
             text = item["text"]
             label = item["label"]
 
-            full_prompt = build_prompt(text, label=label)
-            prompt_only = build_prompt(text, label=None)
+            # Truncate only the speech text; label token is always preserved
+            text_ids = tokenizer(text, add_special_tokens=False)["input_ids"][:text_budget]
+            truncated_text = tokenizer.decode(text_ids, skip_special_tokens=True)
 
-            full_enc = tokenizer(full_prompt, max_length=max_length, truncation=True)
-            prompt_len = len(
-                tokenizer(prompt_only, max_length=max_length, truncation=True)["input_ids"]
-            )
+            full_prompt = build_prompt(truncated_text, label=label)
+            prompt_only = build_prompt(truncated_text, label=None)
 
-            input_ids = full_enc["input_ids"]
-            attention_mask = full_enc["attention_mask"]
-            labels = [-100] * prompt_len + input_ids[prompt_len:]
+            full_enc = tokenizer(full_prompt)
+            full_ids = full_enc["input_ids"]
+            prompt_ids = tokenizer(prompt_only)["input_ids"]
+
+            # Find where full_ids and prompt_ids first diverge — handles both
+            # clean appends and tokenization boundary merges (trailing space
+            # merging into the label token, making len(full_ids)==len(prompt_ids)).
+            min_len = min(len(full_ids), len(prompt_ids))
+            prompt_len = min_len
+            for i in range(min_len):
+                if full_ids[i] != prompt_ids[i]:
+                    prompt_len = i
+                    break
+
+            if prompt_len >= len(full_ids):
+                continue  # label not recoverable from this example
+
+            labels = [-100] * prompt_len + full_ids[prompt_len:]
 
             self.examples.append(
-                {"input_ids": input_ids, "attention_mask": attention_mask, "labels": labels}
+                {"input_ids": full_ids, "attention_mask": full_enc["attention_mask"], "labels": labels}
             )
 
     def __len__(self):
@@ -237,6 +282,8 @@ def main():
     parser.add_option("--dev-file", type=str, default="dev.jsonlist")
     parser.add_option("--test-file", type=str, default="test.jsonlist")
     parser.add_option("--output-prefix", type=str, default="llama_qlora")
+    parser.add_option("--outdir", type=str, default=None,
+                      help="Override output directory (ignores basedir and output-prefix)")
     parser.add_option("--n-epochs", type=int, default=3)
     parser.add_option("--lr", type=float, default=2e-4)
     parser.add_option("--batch-size", type=int, default=4)
@@ -246,6 +293,8 @@ def main():
     parser.add_option("--lora-alpha", type=int, default=16)
     parser.add_option("--eval-batch-size", type=int, default=8)
     parser.add_option("--seed", type=int, default=42)
+    parser.add_option("--logging-steps", type=int, default=50,
+                      help="Log loss every N steps: default=%default")
     parser.add_option("--no-4bit", action="store_true", default=False)
     parser.add_option("--do-train", action="store_true", default=False)
     parser.add_option("--do-eval", action="store_true", default=False)
@@ -267,10 +316,13 @@ def main():
     logger.info(f"Device: {device}")
 
     model_short = opts.model.rstrip("/").split("/")[-1]
-    outdir = os.path.join(
-        opts.basedir, "llama",
-        f"{opts.output_prefix}_{model_short}_s{opts.seed}_lr{opts.lr}",
-    )
+    if opts.outdir:
+        outdir = opts.outdir
+    else:
+        outdir = os.path.join(
+            opts.basedir, "llama",
+            f"{opts.output_prefix}_{model_short}_s{opts.seed}_lr{opts.lr}",
+        )
     os.makedirs(outdir, exist_ok=True)
     logger.info(f"Output dir: {outdir}")
 
@@ -292,7 +344,7 @@ def main():
             opts.model, quantization_config=bnb_config, device_map="auto"
         )
     else:
-        dtype = torch.float16 if device.type != "cpu" else torch.float32
+        dtype = torch.float16 if device.type == "cuda" else torch.float32
         model = AutoModelForCausalLM.from_pretrained(
             opts.model, torch_dtype=dtype,
             device_map="auto" if device.type == "cuda" else None,
@@ -331,7 +383,7 @@ def main():
             warmup_ratio=0.05,
             lr_scheduler_type="cosine",
             fp16=(device.type == "cuda"),
-            logging_steps=50,
+            logging_steps=opts.logging_steps,
             save_strategy="epoch",
             save_total_limit=1,
             seed=opts.seed,
@@ -344,6 +396,7 @@ def main():
             args=training_args,
             train_dataset=train_dataset,
             data_collator=partial(collate_fn, pad_token_id=tokenizer.pad_token_id),
+            callbacks=[ZeroLossCallback(check_after_steps=5)],
         )
 
         logger.info("=== Starting training ===")

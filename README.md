@@ -166,7 +166,16 @@ Predictions and metrics are written to the output dir:
 
 # Experiment 3: Temporal Generalization
 
-Fine-tunes RoBERTa for **relevance classification** (is this speech about immigration? yes/no) separately on each of the three historical eras (early / mid / modern), then evaluates each model on all three eras' test sets. This produces a 3×3 grid of macro-F1 scores measuring how well features learned in one period transfer to another. All 9 combinations are handled by a single script.
+### What the model does
+
+This is encoder-only fine-tuning — no prompt, no generation. RoBERTa-base is fine-tuned for binary classification: given a raw congressional speech segment, predict `yes` (relevant to immigration) or `no` (not relevant). A linear classification head is added on top of RoBERTa's `[CLS]` token representation and trained jointly with the encoder weights via cross-entropy loss on labeled examples. The model sees only the speech text — no task description or instructions.
+
+Three separate models are trained, one per historical era:
+- **Early** (~1870s–1920s): Reconstruction, Chinese Exclusion Act, first great immigration wave
+- **Mid** (~1930s–1970s): New Deal through Cold War, national quota system debates
+- **Modern** (~1980s–2010s): Reagan-era reform, post-9/11, contemporary border policy
+
+Each model learns era-specific surface features that correlate with immigration relevance (e.g. the modern model picks up on "undocumented", "DACA", "border"; the early model on "Chinese", "alien", "naturalization"). The experiment then tests whether those features transfer across time by evaluating all three models on all three test sets — producing a 3×3 grid. Cross-era drops reveal how much immigration rhetoric has shifted: a modern model that learned contemporary vocabulary struggles to recognize an 1880s speech about the Chinese Exclusion Act as immigration-relevant, even though it clearly is.
 
 **Prerequisite:** per-era splits must exist under `data/annotations/relevance_and_tone/{era}/relevance/splits/basic/`. Run the split generation step from "Prep the data" section above if needed.
 
