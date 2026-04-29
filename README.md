@@ -100,20 +100,32 @@ pip install torch --index-url https://download.pytorch.org/whl/cu124
 
 Each directory needs `all.jsonlist` (train), `dev.jsonlist`, and `test.jsonlist`. Generate these with the split generation step in "Prep the data" if missing.
 
+### Bugs fixed (run2)
+
+Run1 produced loss=0 throughout training due to two bugs in the dataset construction, both in `ToneDataset` / `RelevanceDataset`:
+
+1. **Label token truncated by long speeches.** The full sequence (guidelines + speech + label) was tokenized with `truncation=True, max_length=512`, which cuts from the right — silently removing the label token for any speech long enough to fill the context. Fix: pre-compute the token budget for the speech text (`max_length - template_tokens - 1`) and truncate only the speech, guaranteeing the label token always survives.
+
+2. **Tokenization boundary merge.** Even after fix #1, loss was still 0. The trailing `"Tone: "` produces a standalone space token when tokenized alone, but when the label is appended (`"Tone: negative"`), the tokenizer merges the space into the label token (`"▁negative"`). This made `len(full_ids) == len(prompt_ids)`, so `labels` was all `-100`. Fix: instead of using `len(prompt_ids)` as the boundary, find the first position where `full_ids` and `prompt_ids` diverge — this correctly handles both clean appends and boundary merges.
+
+A `ZeroLossCallback` was also added to both scripts: if loss stays exactly `0.0` for 5 consecutive logging steps, training aborts immediately with an error rather than wasting GPU hours.
+
+**Use run2 scripts, not run1.**
+
 ### Training on PACE
 
 ```bash
 # Tone classifier (Llama-3.2-1B, 3 epochs, QLoRA)
-sbatch llama-runs/run1/pace_train_llama_tone.sh
+sbatch llama-runs/run2/pace_train_llama_tone.sh
 
 # Relevance classifier (Llama-3.2-1B, 3 epochs, QLoRA)
-sbatch llama-runs/run1/pace_train_llama_relevance.sh
+sbatch llama-runs/run2/pace_train_llama_relevance.sh
 ```
 
 Both scripts:
 - Download and cache the model to `$HOME/scratch/hf_cache` before training
 - Use batch size 4, gradient accumulation 4 (effective batch 16), lr 2e-4, cosine schedule
-- Save the fine-tuned LoRA adapter to `data/speeches/Congress/{task}/splits/{split}/llama/llama_qlora_Llama-3.2-1B_s42_lr0.0002/`
+- Save results to `llama-runs/run2/tone/` and `llama-runs/run2/relevance/`
 
 ### Running manually
 
@@ -156,9 +168,36 @@ Predictions and metrics are written to the output dir:
 - `preds_dev.tsv` / `preds_test.tsv` — predicted label indices and class probabilities
 - `eval_results_dev.txt` / `eval_results_test.txt` — accuracy, per-class F1, macro-F1
 
+### Results
+
+#### Run1 (broken — loss=0 throughout)
+
+| Task | Macro-F1 (dev) | Macro-F1 (test) |
+|------|---------------|-----------------|
+| Tone | 0.32 | 0.32 |
+| Relevance | 0.50 | 0.49 |
+
+Both at random-chance level (3-class baseline = 0.33, binary baseline = 0.50). Training loss was 0 for all steps due to the bugs described above — the model never learned anything.
+
+#### Run2 (bugs fixed)
+
+| Task | Metric | Dev | Test |
+|------|--------|-----|------|
+| Tone | Macro-F1 | 0.4153 | 0.3985 |
+| Tone | F1-anti | 0.3852 | 0.4065 |
+| Tone | F1-neutral | 0.4242 | 0.4505 |
+| Tone | F1-pro | 0.4364 | 0.3386 |
+| Relevance | Macro-F1 | 0.5174 | 0.4874 |
+| Relevance | F1-yes | 0.4028 | 0.3563 |
+| Relevance | Accuracy | 0.5446 | 0.5210 |
+
+**Comparison to run1:** Tone macro-F1 improved from 0.32 → 0.40 (+8 points), confirming the model is now actually learning. Relevance macro-F1 improved marginally (0.49 → 0.49) at the macro level but F1-yes improved (0.35 → 0.36), again showing real learning.
+
+**Interpretation:** Tone results are meaningfully above chance and show the model has learned to distinguish anti/neutral/pro framing. Neutral is the easiest class (F1=0.45), which makes sense as it has the most distinct surface features (procedural language, statistics). Pro and anti are harder to separate. Relevance results are weaker — the model is still closer to the binary baseline (0.50), suggesting the 1B model struggles with the relevance boundary more than tone. Increasing to a larger model or more epochs would likely help both tasks.
+
 ### Notes
 
-- 4-bit quantization requires CUDA; MPS/CPU automatically fall back to fp16/fp32 full precision
+- 4-bit quantization requires CUDA; MPS/CPU automatically fall back to fp32
 - Classification is done via log-probability comparison over label tokens at the last prompt position — no additional classification head
 - Tone label tokens: `negative` (anti), `neutral`, `positive` (pro)
 - Relevance label tokens: `no`, `yes`
